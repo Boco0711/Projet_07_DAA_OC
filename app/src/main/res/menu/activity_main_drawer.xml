@@ -7,16 +7,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_nav_mylunch"
-            android:icon="@drawable/ic_restaurant_menu_white"
+            android:icon="@drawable/drawermenu_yourlunch"
             android:title="@string/your_lunch"
             />
         <item
             android:id="@+id/drawer_nav_settings"
-            android:icon="@drawable/ic_settings_menu_white"
+            android:icon="@drawable/drawermenu_settings"
             android:title="@string/settings" />
         <item
             android:id="@+id/drawer_nav_logout"
-            android:icon="@drawable/ic_logout_menu_white"
+            android:icon="@drawable/drawermenu_logout"
             android:title="@string/logout" />
     </group>
 
