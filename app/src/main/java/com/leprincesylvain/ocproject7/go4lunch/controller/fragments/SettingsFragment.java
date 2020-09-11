@@ -1,4 +1,4 @@
-package com.leprincesylvain.go4lunch.controller.fragments;
+package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
 public class SettingsFragment {
 }
