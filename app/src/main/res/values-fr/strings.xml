@@ -39,4 +39,6 @@
     <string name="sign_in_with_twitter">S\'enregistrer avec Twitter</string>
     <string name="start_filter">Un filtre pour l\'image</string>
     <string name="the_logo_of_the_app">Le logo de l\'app</string>
+    <string name="the_facebook_logo">Le logo de facebook</string>
+    <string name="the_google_logo">Le logo de Google</string>
 </resources>
