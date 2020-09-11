@@ -5,7 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controller.activities.StartActivity"
-   >
+    android:background="@drawable/back_screen">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/foreground"
+        android:contentDescription="@string/start_filter"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toBottomOf="@id/start_title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_foreground"
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="VectorDrawableCompat"
+        android:contentDescription="@string/the_logo_of_the_app"/>
+
+    <TextView
+        android:id="@+id/start_title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/start_title_size"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/start_devise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/start_title"
+        android:text="@string/devise"
+        android:textColor="@color/white"
+        android:textSize="@dimen/start_devise_size"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

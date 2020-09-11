@@ -50,4 +50,5 @@
     <string name="is_joining">" is joining!"</string>
     <string name="not_selected_restaurant_mylunch">You did not select any restaurant to eat at</string>
     <string name="selected_a_restaurant_mylunch">"You will eat at "</string>
+    <string name="the_logo_of_the_app">The logo of the app</string>
 </resources>
