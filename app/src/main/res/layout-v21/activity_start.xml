@@ -118,8 +118,6 @@
                 android:contentDescription="@string/the_google_logo"
                 />
 
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -136,15 +134,13 @@
                 android:layout_height="60dp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@drawable/button_backgroung"
-                android:backgroundTint="#6C4BE4"
                 android:padding="10dp"
                 android:text="@string/sign_in_with_twitter"
                 android:textColor="@color/white"
                 />
 
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
