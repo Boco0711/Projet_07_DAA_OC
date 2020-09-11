@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:background="@drawable/back_screen">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_foreground"
+        android:contentDescription="@string/start_filter"/>
+
+    <TextView
+        android:id="@+id/nav_header_app_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/nav_header_profile_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:contentDescription="@string/nav_header_desc"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <TextView
+        android:id="@+id/nav_header_profil_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/nav_header_profile_image"
+        app:layout_constraintLeft_toRightOf="@+id/nav_header_profile_image"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        />
+
+    <TextView
+        android:id="@+id/nav_header_profil_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/nav_header_profil_name"
+        app:layout_constraintLeft_toRightOf="@id/nav_header_profile_image"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="20dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
