@@ -20,7 +20,7 @@
         android:layout_height="350dp"
         app:layout_constraintBottom_toBottomOf="@id/start_title"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_foreground"
+        app:srcCompat="@drawable/app_logo_foreground"
         tools:layout_editor_absoluteX="0dp"
         tools:ignore="VectorDrawableCompat"
         android:contentDescription="@string/the_logo_of_the_app"/>
