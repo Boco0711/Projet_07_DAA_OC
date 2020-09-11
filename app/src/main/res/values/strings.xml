@@ -1,0 +1,53 @@
+<resources>
+
+        // Non translatable Strings
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+    <string name="logo_foreground" translatable="false">Logo foreground</string>
+    <string name="menu_slideshow" translatable="false">Slideshow</string>
+    <string name="home_second" translatable="false">Home Second</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+
+
+        // Translatable Strings
+
+    <string name="app_name">Go4Lunch</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="start_filter" >A filter for the image</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="devise">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="a_restaurant_picture">A picture of restaurant</string>
+    <string name="star">A star</string>
+    <string name="coworker_picture">Coworker image</string>
+    <string name="restaurant_picture">Restaurant image</string>
+    <string name="phone_image">Phone image</string>
+    <string name="like_image">Like image</string>
+    <string name="website_image">Website image</string>
+    <string name="call">CALL</string>
+    <string name="like">Like</string>
+    <string name="website">WEBSITE</string>
+    <string name="your_lunch">YOUR LUNCH</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logout">LOGOUT</string>
+    <string name="search">Search</string>
+    <string name="workmates">Workmates</string>
+    <string name="list_view">List View</string>
+    <string name="map_view">Map View</string>
+    <string name="change_language">Change language</string>
+    <string name="choose_language">Choose Language…</string>
+    <string name="open_until">"Open until "</string>
+    <string name="selected_language">English</string>
+    <string name="hasChoose">" is eating at "</string>
+    <string name="has_not_choose">" hasn't decided yet"</string>
+    <string name="is_joining">" is joining!"</string>
+    <string name="not_selected_restaurant_mylunch">You did not select any restaurant to eat at</string>
+    <string name="selected_a_restaurant_mylunch">"You will eat at "</string>
+</resources>

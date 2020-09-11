@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="navigation_drawer_open">Ouvre le menu de navigation</string>
+    <string name="navigation_drawer_close">Ferme le menu de navigation</string>
+    <string name="action_settings">Options</string>
+    <string name="menu_home">Accueil</string>
+    <string name="menu_gallery">Gallerie</string>
+    <string name="devise">Trouver un joli restaurant et inviter vos collègues</string>
+    <string name="sign_in_with_facebook">S\'enregistrer avec Facebook</string>
+    <string name="sign_in_with_google">S\'enregistrer avec Google</string>
+    <string name="title_activity_maps">Carte</string>
+    <string name="your_lunch">VOTRE REPAS</string>
+    <string name="a_restaurant_picture">Une image de restaurant</string>
+    <string name="star">Une étoile</string>
+    <string name="coworker_picture">Image de collègue</string>
+    <string name="restaurant_picture">Image de restaurant</string>
+    <string name="phone_image">Image de téléphone</string>
+    <string name="like_image">Image de like</string>
+    <string name="website_image">Image de site internet</string>
+    <string name="call">APPELER</string>
+    <string name="like">J\'AIME</string>
+    <string name="website">SITE INTERNET</string>
+    <string name="settings">OPTIONS</string>
+    <string name="logout">DECONNEXION</string>
+    <string name="search">Chercher</string>
+    <string name="workmates">Collègues</string>
+    <string name="list_view">Liste</string>
+    <string name="map_view">Carte</string>
+    <string name="change_language">Changer de langue</string>
+    <string name="choose_language">Choisir la langue</string>
+    <string name="open_until">"Ouvert jusque "</string>
+    <string name="selected_language">Français</string>
+    <string name="hasChoose">" mange à "</string>
+    <string name="has_not_choose">" n'a pas encore décidé"</string>
+    <string name="is_joining">" y va!"</string>
+    <string name="not_selected_restaurant_mylunch">Vous n\'avez pas choisi de restaurant où manger</string>
+    <string name="selected_a_restaurant_mylunch">"Vous mangez à "</string>
+    <string name="sign_in_with_twitter">S\'enregistrer avec Twitter</string>
+    <string name="start_filter">Un filtre pour l\'image</string>
+</resources>
