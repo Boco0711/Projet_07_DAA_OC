@@ -10,7 +10,8 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="@string/a_picture_of_the_workmate" />
 
     <TextView
         android:id="@+id/workmate_text"
