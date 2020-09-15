@@ -1,5 +1,6 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,8 +14,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 
@@ -28,11 +32,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView bottomNavigationView;
 
     // Fragment iD
-    public static final int MAPVIEW_FRAGMENT = 1;
-    public static final int RESTAURANT_LISTVIEW_FRAGMENT = 2;
-    public static final int COWORKER_LISTVIEW_FRAGMENT = 3;
-    private static final int MY_LUNCH_FRAGMENT = 4;
-    private static final int SETTINGS_FRAGMENT = 5;
+    public static final int MAPVIEW_FRAGMENT = R.id.bottom_nav_mapview;
+    public static final int RESTAURANT_LISTVIEW_FRAGMENT = R.id.bottom_nav_listview;
+    public static final int COWORKER_LISTVIEW_FRAGMENT = R.id.bottom_nav_workmates;
+    private static final int MY_LUNCH_FRAGMENT = R.id.drawer_nav_mylunch;
+    private static final int SETTINGS_FRAGMENT = R.id.drawer_nav_settings;
 
     // Fragment Declaration
     private MapViewFragment mapViewFragment = (MapViewFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                updateMainFragment(item.getItemId());
+                callShowProperFragment(item.getItemId());
                 return false;
             }
         });
@@ -104,25 +108,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.d(TAG, "onNavigationItemSelected: ");
-        return false;
-    }
-
-    private void updateMainFragment(Integer integer) {
-        switch (integer) {
-            case R.id.bottom_nav_mapview:
-                this.showFragment(MAPVIEW_FRAGMENT);
-                break;
-            case R.id.bottom_nav_listview:
-                this.showFragment(RESTAURANT_LISTVIEW_FRAGMENT);
-                break;
-            case R.id.bottom_nav_workmates:
-                this.showFragment(COWORKER_LISTVIEW_FRAGMENT);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.drawer_nav_logout) {
+            Log.d(TAG, "onNavigationItemSelected: click on logout");
+        } else {
+            callShowProperFragment(itemId);
         }
+        this.drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
-
-    private void showFragment(int fragmentIdentifier) {
+    private void callShowProperFragment(int fragmentIdentifier) {
         switch (fragmentIdentifier) {
             case MAPVIEW_FRAGMENT:
                 Log.d(TAG, "showFragment: MapView");
@@ -144,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "showFragment: Settings");
                 this.showSettingsFragment();
                 break;
-
             default:
                 break;
         }
