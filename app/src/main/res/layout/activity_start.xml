@@ -20,7 +20,7 @@
         android:layout_height="350dp"
         app:layout_constraintBottom_toBottomOf="@id/start_title"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/app_logo_foreground"
+        app:srcCompat="@drawable/logo_app_foreground"
         tools:layout_editor_absoluteX="0dp"
         tools:ignore="VectorDrawableCompat"
         android:contentDescription="@string/the_logo_of_the_app"/>
@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:src="@drawable/facebook_logo"
+                android:src="@drawable/logo_facebook"
                 android:contentDescription="@string/the_facebook_logo"
                 android:elevation="10dp"
                 tools:ignore="UnusedAttribute"

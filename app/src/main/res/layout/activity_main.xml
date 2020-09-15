@@ -29,7 +29,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_logo_foreground"
+            android:src="@drawable/logo_app_foreground"
             android:layout_gravity="center_horizontal|bottom"
             android:contentDescription="@string/logo_foreground" />
 
