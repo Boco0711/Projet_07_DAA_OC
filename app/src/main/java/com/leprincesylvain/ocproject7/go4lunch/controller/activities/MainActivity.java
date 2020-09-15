@@ -1,11 +1,9 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,14 +11,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "MainActivity_TAG";
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         configureNavigationView();
         configureBottomNavigationView();
+        setRetrofitForLaterCall();
     }
 
     private void configureToolbar() {
@@ -173,5 +173,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
         }
+    }
+
+    private void setRetrofitForLaterCall() {
+        Log.d(TAG, "setRetrofitForLaterCall: ");
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
     }
 }
