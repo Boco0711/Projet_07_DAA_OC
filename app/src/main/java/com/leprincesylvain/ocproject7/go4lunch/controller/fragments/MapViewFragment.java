@@ -25,9 +25,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
     private Context mContext;
 
-    private Boolean mLocationPermissionGranted = false;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
     public MapViewFragment(){
     }
 
@@ -59,46 +56,5 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: ");
         this.googleMap = googleMap;
-        if (mLocationPermissionGranted) {
-            Log.d(TAG, "onMapReady: permission is granted you may proceed");
-        } else {
-            Log.d(TAG, "onMapReady: permission is not granted get permission first and try again");
-            getLocationPermission();
-        }
-    }
-
-    private void getLocationPermission() {
-        Log.d(TAG, "getLocationPermission: ");
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "getLocationPermission: set permission on true");
-            mLocationPermissionGranted = true;
-            onMapReady(googleMap);
-        } else {
-            Log.d(TAG, "getLocationPermission: open authorization page");
-            if (this.getActivity() != null) {
-                Log.d(TAG, "getLocationPermission: this.getActivity() != null");
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionResult: ");
-        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "onRequestPermissionResult: permission ");
-                onMapReady(googleMap);
-            } else {
-                Log.d(TAG, "onRequestPermissionResult: permission denied");
-                Toast.makeText(mContext, "If you want to use our app you need to allow device location", Toast.LENGTH_LONG).show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getLocationPermission();
-                    }
-                }, 3500);
-            }
-        }
     }
 }
