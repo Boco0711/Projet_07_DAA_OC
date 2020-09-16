@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "934969167950-sf854th1cbi3aj8j0jphd3j2a2qvrvh8.apps.googleusercontent.com",
+          "client_id": "934969167950-bamn7tb5bfdqr5fpvnphtnr3q2ka95aj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.leprincesylvain.ocproject7.go4lunch",
@@ -23,20 +23,20 @@
           }
         },
         {
-          "client_id": "934969167950-dp2sva9ncfhh0pk2cgej50a8p8qvvmf0.apps.googleusercontent.com",
+          "client_id": "934969167950-2kfbp8t1d2blar86fn86p6q9ja467ijn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAP7BWzmnjPUE31gQGygt_yB-WCNcOoI7w"
+          "current_key": "AIzaSyC7ODitRjdvWtthx6qh5qfm0ujuiR9GE5U"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "934969167950-dp2sva9ncfhh0pk2cgej50a8p8qvvmf0.apps.googleusercontent.com",
+              "client_id": "934969167950-2ob9i4djikshc7dpus51svkcaiv21o2r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
