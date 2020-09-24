@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: new latitude: " + location.getLatitude() + " longitude: " + location.getLongitude());
-        updateLocation(location);
+        updateLocationOnMapsFragment(location);
     }
 
     @Override
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onStatusChanged: ");
     }
 
-    private void updateLocation(Location location) {
+    private void updateLocationOnMapsFragment(Location location) {
         Log.d(TAG, "updateLocation: ");
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (this.mapViewFragment == null) {
