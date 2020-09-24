@@ -1,4 +1,6 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
-public class RestaurantListViewFragment {
+import androidx.fragment.app.Fragment;
+
+public class RestaurantListViewFragment extends Fragment {
 }
