@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -29,6 +31,8 @@ import com.google.gson.GsonBuilder;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -39,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Ui component
     private Toolbar toolbar;
     private DrawerLayout drawer;
-    private NavigationView navigationView;
-    private BottomNavigationView bottomNavigationView;
 
     // Fragment iD
     public static final int MAPVIEW_FRAGMENT = R.id.bottom_nav_mapview;
@@ -98,12 +100,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView() {
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void configureBottomNavigationView() {
-        bottomNavigationView = findViewById(R.id.bottom_nav_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -166,11 +168,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showMapViewFragment() {
         Log.d(TAG, "showMapViewFragment: creating a new MapViewFragment");
         this.mapViewFragment = new MapViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("latlng", latLng);
+        this.mapViewFragment.setArguments(bundle);
         this.startTransactionFragment(this.mapViewFragment);
     }
 
     private void showRestaurantListViewFragment() {
         Log.d(TAG, "showRestaurantListViewFragment: ");
+        this.restaurantListViewFragment = new RestaurantListViewFragment();
+        this.startTransactionFragment(this.restaurantListViewFragment);
     }
 
     private void showCoworkerListViewFragment() {
@@ -224,9 +231,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onRequestPermissionResult: ");
         if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "onRequestPermissionResult: permission ");
+                Log.d(TAG, "onRequestPermissionResult: permission granted");
+                mLocationPermissionGranted = true;
+                getDeviceLocation();
             } else {
                 Log.d(TAG, "onRequestPermissionResult: permission denied");
+                mLocationPermissionGranted = false;
                 Toast.makeText(this, "If you want to use our app you need to allow device location", Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -242,8 +252,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "getDeviceLocation: ");
         try {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null)
+            if (locationManager != null) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+            }
         } catch (SecurityException securityException) {
             Log.d(TAG, "getDeviceLocation: ", securityException);
         }
@@ -251,8 +262,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: new latitude: " + location.getLatitude() + " longitude: " + location.getLongitude() );
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.d(TAG, "onLocationChanged: new latitude: " + location.getLatitude() + " longitude: " + location.getLongitude());
+        updateLocation(location);
     }
 
     @Override
@@ -270,4 +281,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d(TAG, "onStatusChanged: ");
     }
+
+    private void updateLocation(Location location) {
+        Log.d(TAG, "updateLocation: ");
+        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (this.mapViewFragment == null) {
+            Log.d(TAG, "updateLocation: mapViewFragment == null");
+            showMapViewFragment();
+        } else {
+            Log.d(TAG, "updateLocation: mapViewFragment != null");
+            this.mapViewFragment.moveCameraIn(latLng, 16);
+        }
+    }
+
 }
