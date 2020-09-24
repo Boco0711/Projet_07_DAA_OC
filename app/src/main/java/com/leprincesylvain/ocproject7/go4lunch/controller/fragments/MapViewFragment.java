@@ -1,22 +1,19 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback {
@@ -24,6 +21,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private Context mContext;
+    private LatLng latLng;
 
     public MapViewFragment(){
     }
@@ -34,6 +32,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         Log.d(TAG, "onCreate: ");
         if (getArguments() != null) {
             Log.d(TAG, "onCreate: getArguments() != null");
+            latLng = getArguments().getParcelable("latlng");
         }
     }
 
@@ -56,5 +55,18 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: ");
         this.googleMap = googleMap;
+        googleMap.setMapType(R.raw.custommap);
+        if (latLng != null) {
+            Log.d(TAG, "onMapReady: latlng != null");
+            moveCameraIn(latLng, 16);
+        }
+    }
+
+    public void moveCameraIn(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCameraIn: Lat: " +latLng.latitude + " Lng: " + latLng.longitude + " zoom: " + zoom);
+        if (googleMap != null) {
+            Log.d(TAG, "moveCameraIn: neither element are null");
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        }
     }
 }
