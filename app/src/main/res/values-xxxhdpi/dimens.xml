@@ -1,0 +1,73 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+
+    <!-- Start Activity Dimens -->
+    <dimen name="startActivity_logo_size">350dp</dimen>
+    <dimen name="startActivity_title_size">70sp</dimen>
+    <dimen name="startActivity_devise_size">12sp</dimen>
+    <dimen name="startActivity_Button_height">60dp</dimen>
+    <dimen name="startActivity_Button_Margin_Start">30dp</dimen>
+    <dimen name="startActivity_Button_Margin_End">30dp</dimen>
+    <dimen name="startActivity_Button_Margin_Between_Button">30dp</dimen>
+    <dimen name="startActivity_Button_Padding">10dp</dimen>
+    <dimen name="startActivity_Image_Button_Width">60dp</dimen>
+    <dimen name="startActivity_Button_Margin_Bottom">10dp</dimen>
+
+    <!-- Restaurant Details Dimens -->
+    <dimen name="restaurantDetails_Restaurant_Picture_Height">280dp</dimen>
+    <dimen name="restaurantDetails_Floating_Action_Button_Margin_End">14dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Name_Size">18sp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Name_Margin_Top">10dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Name_Margin_Start">10dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Rating_MarginStart">10dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Address_Size">16sp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Address_Margin_Top">8dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Address_Margin_Bottom">20dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Address_Margin_Start">10dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Button_Margin_Top">8dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Button_Text_Size">18sp</dimen>
+
+    <!-- My Lunch Fragment Dimens -->
+    <dimen name="myLunchFragment_Selected_Restaurant_Size">18sp</dimen>
+    <dimen name="myLunchFragment_Selected_Restaurant_margin">7dp</dimen>
+
+    <!-- Settings Fragment Dimens -->
+    <dimen name="settingsFragment_Button_Margin">7dp</dimen>
+    <dimen name="settingsFragment_Change_Language_Size">18sp</dimen>
+
+    <!-- Nav Header Dimens -->
+    <dimen name="navHeader_Height">176dp</dimen>
+    <dimen name="navHeader_App_Title_In_Nav_Header">50sp</dimen>
+    <dimen name="navHeader_App_Title_In_Nav_Header_Margin_Top">10dp</dimen>
+    <dimen name="navHeader_Profil_Image_Side_Size">70dp</dimen>
+    <dimen name="navHeader_Profil_Image_Margin_Start">10dp</dimen>
+    <dimen name="navHeader_Profil_Image_Margin_Bottom">10dp</dimen>
+    <dimen name="navHeader_Profil_Name_Margin_Start">20dp</dimen>
+    <dimen name="navHeader_Profil_Name_Margin_Top">10dp</dimen>
+    <dimen name="navHeader_Profil_Email_Margin_Start">20dp</dimen>
+    <dimen name="navHeader_Profil_Email_Margin_Top">4dp</dimen>
+
+    <!-- Restaurant Dimens -->
+    <dimen name="restaurant_Restaurant_Name_Text_Width">250dp</dimen>
+    <dimen name="restaurant_Restaurant_Name_Size">18sp</dimen>
+    <dimen name="restaurant_Restaurant_Name_Margin_Top">10dp</dimen>
+    <dimen name="restaurant_Restaurant_Name_Margin_Start">10dp</dimen>
+    <dimen name="restaurant_Restaurant_Info_Size">16sp</dimen>
+    <dimen name="restaurant_Restaurant_Info_Margin_Top">2dp</dimen>
+    <dimen name="restaurant_Restaurant_Info_Margin_Start">10dp</dimen>
+    <dimen name="restaurant_Restaurant_Open_Hours_Size">16sp</dimen>
+    <dimen name="restaurant_Restaurant_Open_Hours_Margin_Top">2dp</dimen>
+    <dimen name="restaurant_Restaurant_Image_width">80dp</dimen>
+    <dimen name="restaurant_Restaurant_Image_Height">70dp</dimen>
+    <dimen name="restaurant_Restaurant_Distance_Size">18sp</dimen>
+    <dimen name="restaurant_Restaurant_Distance_Margin_End">10dp</dimen>
+    <dimen name="restaurant_Restaurant_Number_Of_Coworker_Size">16sp</dimen>
+
+    <!-- Workmate -->
+    <dimen name="workmate_Workmate_Picture_Width">70dp</dimen>
+    <dimen name="workmate_Workmate_Picture_Height">70dp</dimen>
+    <dimen name="workmate_Workmate_Picture_Margin_Start">16dp</dimen>
+    <dimen name="workmate_Workmate_Text_Margin_Start">16dp</dimen>
+
+</resources>

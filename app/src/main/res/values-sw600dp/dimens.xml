@@ -1,0 +1,19 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="workmate_Workmate_Picture_Margin_Start">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="navHeader_Height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="start_title_size">70sp</dimen>
+    <dimen name="start_devise_size">12sp</dimen>
+    <dimen name="logo_on_login_screen">350dp</dimen>
+    <dimen name="startActivity_Button_height">60dp</dimen>
+    <dimen name="startActivity_Button_Margin_Start">30dp</dimen>
+    <dimen name="startActivity_Button_Margin_End">30dp</dimen>
+    <dimen name="startActivity_Button_Margin_Between_Button">30dp</dimen>
+    <dimen name="startActivity_Button_Padding">10dp</dimen>
+    <dimen name="startActivity_Image_Button_Width">60dp</dimen>
+    <dimen name="startActivity_Button_Margin_Bottom">50dp</dimen>
+</resources>
