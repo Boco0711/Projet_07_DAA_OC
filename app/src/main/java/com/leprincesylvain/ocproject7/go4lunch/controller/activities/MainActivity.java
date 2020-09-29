@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String username;
     private String userPicture;
     private String usermail;
-    Map<String, Object> user = new HashMap<>();
+    private Map<String, Object> user = new HashMap<>();
 
     // Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -98,53 +98,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setRetrofitForLaterCall();
         getLocationPermission();
         getUserDetails();
-    }
-
-    private void getUserDetails() {
-        Log.d(TAG, "getUserDetails: ");
-        if (getIntent().getExtras() != null) {
-            Log.d(TAG, "getUserDetails: getExtras() != null");
-            username = getIntent().getExtras().getString("user_name");
-            userPicture = getIntent().getExtras().getString("user_photo");
-            usermail = getIntent().getExtras().getString("user_email");
-            userId = getIntent().getExtras().getString("user_id");
-
-            user.put(KEY_USERNAME, username);
-            user.put(KEY_USERMAIL, usermail);
-            user.put(KEY_USERPICTURE, userPicture);
-            Log.d(TAG, "onCreate: " + userId);
-            if (userId != null) {
-                createUserInFirestoreIfNotExisting(user);
-            }
-        } else {
-            Log.d(TAG, "getUserDetails: getExtras() == null");
+        if (userId != null) {
+            createUserInFirestoreIfNotExisting();
         }
-    }
-
-    private void createUserInFirestoreIfNotExisting(final Map<String, Object> user) {
-        Log.d(TAG, "getUserDetails: userId != null");
-        collectionReference.document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: ");
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if (documentSnapshot != null && !documentSnapshot.exists()) {
-                                Log.d(TAG, "onComplete: documentSnapshot!exist");
-                                collectionReference.document(userId).set(user);
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: " + e.getMessage());
-
-                    }
-                })
-        ;
     }
 
     private void configureToolbar() {
@@ -365,4 +321,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void getUserDetails() {
+        Log.d(TAG, "getUserDetails: ");
+        if (getIntent().getExtras() != null) {
+            Log.d(TAG, "getUserDetails: getExtras() != null");
+            username = getIntent().getExtras().getString("user_name");
+            userPicture = getIntent().getExtras().getString("user_photo");
+            usermail = getIntent().getExtras().getString("user_email");
+            userId = getIntent().getExtras().getString("user_id");
+        } else {
+            Log.d(TAG, "getUserDetails: getExtras() == null");
+        }
+    }
+
+    private void createUserInFirestoreIfNotExisting() {
+        Log.d(TAG, "createUserInFirestoreIfNotExisting: ");
+        user.put(KEY_USERNAME, username);
+        user.put(KEY_USERMAIL, usermail);
+        user.put(KEY_USERPICTURE, userPicture);
+        collectionReference.document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: ");
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null && !documentSnapshot.exists()) {
+                                Log.d(TAG, "onComplete: documentSnapshot!exist");
+                                collectionReference.document(userId).set(user);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.getMessage());
+                    }
+                })
+        ;
+    }
 }
