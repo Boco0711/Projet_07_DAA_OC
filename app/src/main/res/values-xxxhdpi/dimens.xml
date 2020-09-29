@@ -1,7 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-
-
     <!-- Start Activity Dimens -->
     <dimen name="startActivity_logo_size">350dp</dimen>
     <dimen name="startActivity_title_size">70sp</dimen>
