@@ -24,14 +24,23 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -63,6 +72,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LatLng latLng;
 
+    // User Details
+    private static final String KEY_USERNAME = "userName";
+    private static final String KEY_USERMAIL = "userMail";
+    private static final String KEY_USERPICTURE = "userProfilPicture";
+    private String userId;
+    private String username;
+    private String userPicture;
+    private String usermail;
+    Map<String, Object> user = new HashMap<>();
+
+    // Firestore
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("Users");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: ");
@@ -74,6 +97,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureBottomNavigationView();
         setRetrofitForLaterCall();
         getLocationPermission();
+        getUserDetails();
+    }
+
+    private void getUserDetails() {
+        Log.d(TAG, "getUserDetails: ");
+        if (getIntent().getExtras() != null) {
+            Log.d(TAG, "getUserDetails: getExtras() != null");
+            username = getIntent().getExtras().getString("user_name");
+            userPicture = getIntent().getExtras().getString("user_photo");
+            usermail = getIntent().getExtras().getString("user_email");
+            userId = getIntent().getExtras().getString("user_id");
+
+            user.put(KEY_USERNAME, username);
+            user.put(KEY_USERMAIL, usermail);
+            user.put(KEY_USERPICTURE, userPicture);
+            Log.d(TAG, "onCreate: " + userId);
+            if (userId != null) {
+                createUserInFirestoreIfNotExisting(user);
+            }
+        } else {
+            Log.d(TAG, "getUserDetails: getExtras() == null");
+        }
+    }
+
+    private void createUserInFirestoreIfNotExisting(final Map<String, Object> user) {
+        Log.d(TAG, "getUserDetails: userId != null");
+        collectionReference.document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: ");
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null && !documentSnapshot.exists()) {
+                                Log.d(TAG, "onComplete: documentSnapshot!exist");
+                                collectionReference.document(userId).set(user);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.getMessage());
+
+                    }
+                })
+        ;
     }
 
     private void configureToolbar() {
