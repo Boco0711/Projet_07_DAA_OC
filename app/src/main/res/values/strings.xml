@@ -20,9 +20,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="devise">Find a nice restaurant and invite your co-workers for lunch!</string>
-    <string name="sign_in_with_facebook">Sign in with Facebook</string>
-    <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="title_activity_maps">Map</string>
     <string name="a_restaurant_picture">A picture of restaurant</string>
     <string name="star">A star</string>
@@ -54,4 +51,8 @@
     <string name="the_facebook_logo">The facebook logo</string>
     <string name="the_google_logo">The google logo</string>
     <string name="a_picture_of_the_workmate">A picture of the workmate</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="sign_in_with_email">Sign in with email</string>
 </resources>
