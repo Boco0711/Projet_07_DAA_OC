@@ -7,8 +7,6 @@
     <string name="menu_home">Accueil</string>
     <string name="menu_gallery">Gallerie</string>
     <string name="devise">Trouver un joli restaurant et inviter vos collègues</string>
-    <string name="sign_in_with_facebook">S\'enregistrer avec Facebook</string>
-    <string name="sign_in_with_google">S\'enregistrer avec Google</string>
     <string name="title_activity_maps">Carte</string>
     <string name="your_lunch">VOTRE REPAS</string>
     <string name="a_restaurant_picture">Une image de restaurant</string>
@@ -36,10 +34,13 @@
     <string name="is_joining">" y va!"</string>
     <string name="not_selected_restaurant_mylunch">Vous n\'avez pas choisi de restaurant où manger</string>
     <string name="selected_a_restaurant_mylunch">"Vous mangez à "</string>
-    <string name="sign_in_with_twitter">S\'enregistrer avec Twitter</string>
     <string name="start_filter">Un filtre pour l\'image</string>
     <string name="the_logo_of_the_app">Le logo de l\'app</string>
     <string name="the_facebook_logo">Le logo de facebook</string>
     <string name="the_google_logo">Le logo de Google</string>
     <string name="a_picture_of_the_workmate">Une image du collègue</string>
+    <string name="sign_in_with_facebook">S\'enregistrer avec Facebook</string>
+    <string name="sign_in_with_google">S\'enregistrer avec Google</string>
+    <string name="sign_in_with_twitter">S\'enregistrer avec Twitter</string>
+    <string name="sign_in_with_email">S\'enregistrer avec email</string>
 </resources>
