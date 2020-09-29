@@ -2,146 +2,163 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_for_activity_start_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.activities.StartActivity"
-    android:background="@drawable/back_screen">
-
+    android:background="@drawable/back_screen"
+    tools:context=".controller.activities.StartActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/foreground"
-        android:contentDescription="@string/start_filter"/>
+        android:contentDescription="@string/start_filter" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        app:layout_constraintBottom_toBottomOf="@id/start_title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_app_foreground"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="VectorDrawableCompat"
-        android:contentDescription="@string/the_logo_of_the_app"/>
 
-    <TextView
-        android:id="@+id/start_title"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="250dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_for_logo_and_devise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="@dimen/start_title_size"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:gravity="center"
-        />
+        app:layout_constraintBottom_toTopOf="@id/email_container"
+        app:layout_constraintTop_toTopOf="@id/container_for_activity_start_layout">
 
-    <TextView
-        android:id="@+id/start_devise"
+        <ImageView
+            android:id="@+id/logo_on_login_screen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/startActivity_logo_size"
+            android:contentDescription="@string/the_logo_of_the_app"
+            app:layout_constraintTop_toTopOf="@id/container_for_logo_and_devise"
+            app:srcCompat="@drawable/logo_app_foreground"
+            tools:ignore="VectorDrawableCompat"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/start_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/startActivity_title_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/start_devise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/devise"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/startActivity_devise_size"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/start_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/email_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/start_title"
-        android:text="@string/devise"
-        android:textColor="@color/white"
-        android:textSize="@dimen/start_devise_size"
-        android:textStyle="italic"
-        android:textAlignment="center"
-        />
+        android:layout_height="@dimen/startActivity_Button_height"
+        app:layout_constraintBottom_toTopOf="@+id/facebook_container"
+        android:layout_marginStart="@dimen/startActivity_Button_Margin_Start"
+        android:layout_marginEnd="@dimen/startActivity_Button_Margin_End"
+        android:layout_marginBottom="@dimen/startActivity_Button_Margin_Between_Button"
+        >
 
-    <LinearLayout
+        <Button
+            android:id="@+id/start_activity_button_email_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/startActivity_Button_height"
+            android:background="@drawable/login_button_rounded_corner_for_google"
+            android:text="@string/sign_in_with_email"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/facebook_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_height="@dimen/startActivity_Button_height"
+        app:layout_constraintBottom_toTopOf="@id/google_container"
+        android:layout_marginStart="@dimen/startActivity_Button_Margin_Start"
+        android:layout_marginEnd="@dimen/startActivity_Button_Margin_End"
+        android:layout_marginBottom="@dimen/startActivity_Button_Margin_Between_Button"
+        >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Button
+            android:id="@+id/start_activity_button_facebook_login"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            >
+            android:layout_height="@dimen/startActivity_Button_height"
+            android:background="@drawable/login_button_rounded_corner_for_facebook"
+            android:text="@string/sign_in_with_facebook"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/start_activity_button_facebook_login"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/login_button_rounded_corner_for_facebook"
-                android:text="@string/sign_in_with_facebook"
-                android:textColor="@color/white"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="UnusedAttribute"
-                />
+        <ImageView
+            android:id="@+id/start_activity_facebook_logo"
+            android:layout_width="@dimen/startActivity_Image_Button_Width"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/the_facebook_logo"
+            android:elevation="10dp"
+            android:src="@drawable/logo_facebook"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UnusedAttribute" />
 
-            <ImageView
-                android:id="@+id/start_activity_facebook_logo"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:src="@drawable/logo_facebook"
-                android:contentDescription="@string/the_facebook_logo"
-                android:elevation="10dp"
-                tools:ignore="UnusedAttribute"
-                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/google_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/startActivity_Button_height"
+        app:layout_constraintBottom_toTopOf="@id/twitter_container"
+        android:layout_marginStart="@dimen/startActivity_Button_Margin_Start"
+        android:layout_marginEnd="@dimen/startActivity_Button_Margin_End"
+        android:layout_marginBottom="@dimen/startActivity_Button_Margin_Between_Button">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Button
+            android:id="@+id/start_activity_button_google_login"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp">
+            android:layout_height="@dimen/startActivity_Button_height"
+            android:background="@drawable/login_button_rounded_corner_for_google"
+            android:padding="@dimen/startActivity_Button_Padding"
+            android:text="@string/sign_in_with_google"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/start_activity_button_google_login"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/login_button_rounded_corner_for_google"
-                android:padding="10dp"
-                android:text="@string/sign_in_with_google"
-                android:textColor="@color/white"
-                tools:ignore="UnusedAttribute" />
+        <ImageView
+            android:id="@+id/start_activity_google_logo"
+            android:layout_width="@dimen/startActivity_Image_Button_Width"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/the_google_logo"
+            android:elevation="10dp"
+            android:src="@mipmap/google_logo_foreground"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UnusedAttribute" />
 
-            <ImageView
-                android:id="@+id/start_activity_google_logo"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:src="@mipmap/google_logo_foreground"
-                android:contentDescription="@string/the_google_logo"
-                android:elevation="10dp"
-                tools:ignore="UnusedAttribute"
-                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/twitter_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/startActivity_Button_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/startActivity_Button_Margin_Start"
+        android:layout_marginEnd="@dimen/startActivity_Button_Margin_End"
+        android:layout_marginBottom="@dimen/startActivity_Button_Margin_Bottom">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/start_activity_button_twitter_login"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="50dp">
+            android:layout_height="@dimen/startActivity_Button_height"
+            android:text="@string/sign_in_with_twitter"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.twitter.sdk.android.core.identity.TwitterLoginButton
-                android:id="@+id/start_activity_button_twitter_login"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                app:layout_constraintTop_toTopOf="parent"
-                android:padding="10dp"
-                android:text="@string/sign_in_with_twitter"
-                android:textColor="@color/white"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

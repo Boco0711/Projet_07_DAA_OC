@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="@dimen/navHeader_Height"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -24,20 +24,20 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/app_name"
         android:textStyle="bold"
-        android:textSize="50sp"
+        android:textSize="@dimen/navHeader_App_Title_In_Nav_Header"
         android:textColor="@color/white"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/navHeader_App_Title_In_Nav_Header_Margin_Top"
         />
 
     <ImageView
         android:id="@+id/nav_header_profile_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/navHeader_Profil_Image_Side_Size"
+        android:layout_height="@dimen/navHeader_Profil_Image_Side_Size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:contentDescription="@string/nav_header_desc"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="@dimen/navHeader_Profil_Image_Margin_Start"
+        android:layout_marginBottom="@dimen/navHeader_Profil_Image_Margin_Bottom"
         />
 
     <TextView
@@ -47,8 +47,8 @@
         app:layout_constraintTop_toTopOf="@+id/nav_header_profile_image"
         app:layout_constraintLeft_toRightOf="@+id/nav_header_profile_image"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="@dimen/navHeader_Profil_Name_Margin_Start"
+        android:layout_marginTop="@dimen/navHeader_Profil_Name_Margin_Top"
         />
 
     <TextView
@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/nav_header_profil_name"
         app:layout_constraintLeft_toRightOf="@id/nav_header_profile_image"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="@dimen/navHeader_Profil_Email_Margin_Start"
+        android:layout_marginTop="@dimen/navHeader_Profil_Email_Margin_Top"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

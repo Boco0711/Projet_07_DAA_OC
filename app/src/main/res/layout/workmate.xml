@@ -7,9 +7,9 @@
 
     <ImageView
         android:id="@+id/workmate_picture"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_width="@dimen/workmate_Workmate_Picture_Width"
+        android:layout_height="@dimen/workmate_Workmate_Picture_Height"
+        android:layout_marginStart="@dimen/workmate_Workmate_Picture_Margin_Start"
         tools:ignore="MissingConstraints"
         android:contentDescription="@string/a_picture_of_the_workmate" />
 
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="italic"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/workmate_Workmate_Text_Margin_Start"
         app:layout_constraintLeft_toRightOf="@+id/workmate_picture"
         app:layout_constraintTop_toTopOf="@+id/workmate_picture"
         app:layout_constraintBottom_toBottomOf="@id/workmate_picture"
