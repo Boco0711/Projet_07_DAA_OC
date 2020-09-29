@@ -36,7 +36,7 @@
     </style>
 
     <style name="FacebookLoginButton">
-        <item name="android:textSize">@dimen/start_devise_size</item>
+        <item name="android:textSize">@dimen/startActivity_devise_size</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:background">#507cc0</item>
         <item name="android:layout_marginTop">10dp</item>
