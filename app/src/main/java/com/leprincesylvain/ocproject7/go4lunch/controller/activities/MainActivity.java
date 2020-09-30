@@ -217,18 +217,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int itemId = item.getItemId();
         if (itemId == R.id.drawer_nav_logout) {
             Log.d(TAG, "onNavigationItemSelected: click on logout");
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                FirebaseAuth.getInstance().signOut();
-                GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut();
-                Intent intent = new Intent(this, StartActivity.class);
-                startActivity(intent);
-            }
+            logOutTheCurrentUser();
         } else {
             callShowProperFragment(itemId);
         }
         this.drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+    
+    private void logOutTheCurrentUser(){
+        Log.d(TAG, "logOutTheCurrentUser: ");
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Log.d(TAG, "logOutTheCurrentUser: signOut currentUser and start the LoginActivity");
+            FirebaseAuth.getInstance().signOut();
+            GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut();
+            Intent intent = new Intent(this, StartActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void callShowProperFragment(int fragmentIdentifier) {
