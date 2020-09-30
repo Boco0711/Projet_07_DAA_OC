@@ -31,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -52,7 +53,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Boolean mLocationPermissionGranted = false;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LatLng latLng;
-    private List<Restaurant> restaurantList = new ArrayList<>();
+    private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
     // User Details
     private static final String KEY_USERNAME = "userName";
@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Users");
+
+    private int numberOfRestaurantFromPlaceCall = 0;
+    private int numberOfCallToDetail = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.mapViewFragment = new MapViewFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("latlng", latLng);
+        bundle.putParcelableArrayList("list", restaurantList);
         this.mapViewFragment.setArguments(bundle);
         this.startTransactionFragment(this.mapViewFragment);
     }
@@ -286,6 +290,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showRestaurantListViewFragment() {
         Log.d(TAG, "showRestaurantListViewFragment: ");
         this.restaurantListViewFragment = new RestaurantListViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("list", restaurantList);
+        mapViewFragment.setArguments(bundle);
         this.startTransactionFragment(this.restaurantListViewFragment);
     }
 
@@ -420,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (response.body() != null) {
                             for (int j = 0; j < response.body().getResults().size(); j++) {
                                 Log.d(TAG, "onResponse: " + j);
+                                numberOfRestaurantFromPlaceCall++;
                                 String place_id = response.body().getResults().get(j).getPlaceId();
                                 getDetail(place_id);
                             }
@@ -452,14 +460,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     Log.d(TAG, "onResponse: is Successfull");
                     if (response.body() != null) {
+                        numberOfCallToDetail++;
                         Restaurant restaurant = response.body().getRestaurant();
                         if (restaurant != null)
                             restaurantList.add(restaurant);
                         if (restaurant.getPhotos() != null)
                             Log.d(TAG, "onResponse: photo != null");
                     }
-                    if (mapViewFragment != null) {
-                        //addTheRestaurantListToMapViewFragment();
+                    if (mapViewFragment != null && numberOfCallToDetail == numberOfRestaurantFromPlaceCall) {
+                        Log.d(TAG, "onResponse: mapView != null");
+                        mapViewFragment.setRestaurantList(restaurantList);
+                        mapViewFragment.putMarkerOnMap(restaurantList);
                     }
                 }
             }
