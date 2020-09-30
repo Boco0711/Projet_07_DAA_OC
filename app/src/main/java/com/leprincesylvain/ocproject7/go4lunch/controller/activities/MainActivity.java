@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,6 +40,7 @@ import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,16 +94,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getUserDetails();
+        if (userId != null) {
+            createUserInFirestoreIfNotExisting();
+        }
         configureToolbar();
         configureDrawerLayout();
         configureNavigationView();
         configureBottomNavigationView();
         setRetrofitForLaterCall();
         getLocationPermission();
-        getUserDetails();
-        if (userId != null) {
-            createUserInFirestoreIfNotExisting();
+    }
+
+    private void getUserDetails() {
+        Log.d(TAG, "getUserDetails: ");
+        if (getIntent().getExtras() != null) {
+            Log.d(TAG, "getUserDetails: getExtras() != null");
+            username = getIntent().getExtras().getString("user_name");
+            userPicture = getIntent().getExtras().getString("user_photo");
+            usermail = getIntent().getExtras().getString("user_email");
+            userId = getIntent().getExtras().getString("user_id");
+        } else {
+            Log.d(TAG, "getUserDetails: getExtras() == null");
         }
+    }
+
+    private void createUserInFirestoreIfNotExisting() {
+        Log.d(TAG, "createUserInFirestoreIfNotExisting: ");
+        user.put(KEY_USERNAME, username);
+        user.put(KEY_USERMAIL, usermail);
+        user.put(KEY_USERPICTURE, userPicture);
+        collectionReference.document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: ");
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null && !documentSnapshot.exists()) {
+                                Log.d(TAG, "onComplete: documentSnapshot!exist");
+                                collectionReference.document(userId).set(user);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + e.getMessage());
+                    }
+                })
+        ;
     }
 
     private void configureToolbar() {
@@ -120,6 +164,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar();
+                TextView nameUser = findViewById(R.id.nav_header_profil_name);
+                TextView emailUser = findViewById(R.id.nav_header_profil_email);
+                ImageView pictureUser = findViewById(R.id.nav_header_profile_image);
+                if (username != null) {
+                    nameUser.setText(username);
+                }
+                if (usermail != null) {
+                    emailUser.setText(usermail);
+                }
+                if (userPicture != null) {
+                    Picasso.get().load(userPicture).into(pictureUser);
+                }
             }
         };
         drawer.addDrawerListener(toggle);
@@ -319,46 +375,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d(TAG, "updateLocation: mapViewFragment != null");
             this.mapViewFragment.moveCameraIn(latLng, 16);
         }
-    }
-
-    private void getUserDetails() {
-        Log.d(TAG, "getUserDetails: ");
-        if (getIntent().getExtras() != null) {
-            Log.d(TAG, "getUserDetails: getExtras() != null");
-            username = getIntent().getExtras().getString("user_name");
-            userPicture = getIntent().getExtras().getString("user_photo");
-            usermail = getIntent().getExtras().getString("user_email");
-            userId = getIntent().getExtras().getString("user_id");
-        } else {
-            Log.d(TAG, "getUserDetails: getExtras() == null");
-        }
-    }
-
-    private void createUserInFirestoreIfNotExisting() {
-        Log.d(TAG, "createUserInFirestoreIfNotExisting: ");
-        user.put(KEY_USERNAME, username);
-        user.put(KEY_USERMAIL, usermail);
-        user.put(KEY_USERPICTURE, userPicture);
-        collectionReference.document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: ");
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if (documentSnapshot != null && !documentSnapshot.exists()) {
-                                Log.d(TAG, "onComplete: documentSnapshot!exist");
-                                collectionReference.document(userId).set(user);
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: " + e.getMessage());
-                    }
-                })
-        ;
     }
 }
