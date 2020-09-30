@@ -45,10 +45,14 @@ import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToPlace;
+import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Boolean mLocationPermissionGranted = false;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LatLng latLng;
+    private List<Restaurant> restaurantList = new ArrayList<>();
 
     // User Details
     private static final String KEY_USERNAME = "userName";
@@ -414,7 +419,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Log.d(TAG, "getListOfRest onResponse: is Successfull");
                         if (response.body() != null) {
                             for (int j = 0; j < response.body().getResults().size(); j++) {
+                                Log.d(TAG, "onResponse: " + j);
                                 String place_id = response.body().getResults().get(j).getPlaceId();
+                                getDetail(place_id);
                             }
                         }
                     }
@@ -430,5 +437,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IllegalStateException | JsonSyntaxException exception) {
             Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
         }
+    }
+
+    private void getDetail(String placeId) {
+        Log.d(TAG, "getDetail: ");
+
+        String url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeId + "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=" + getResources().getString(R.string.google_api_key);
+        Call<ResponseToDetail> call = mapsCallApi.getRestaurantDetails(url);
+
+        Log.d(TAG, "getDetail: " + url);
+        call.enqueue(new Callback<ResponseToDetail>() {
+            @Override
+            public void onResponse(Call<ResponseToDetail> call, Response<ResponseToDetail> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: is Successfull");
+                    if (response.body() != null) {
+                        Restaurant restaurant = response.body().getRestaurant();
+                        if (restaurant != null)
+                            restaurantList.add(restaurant);
+                        if (restaurant.getPhotos() != null)
+                            Log.d(TAG, "onResponse: photo != null");
+                    }
+                    if (mapViewFragment != null) {
+                        //addTheRestaurantListToMapViewFragment();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseToDetail> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 }
