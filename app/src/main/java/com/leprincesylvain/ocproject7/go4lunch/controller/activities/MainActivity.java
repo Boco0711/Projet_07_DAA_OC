@@ -40,15 +40,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToPlace;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -225,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return true;
     }
-    
-    private void logOutTheCurrentUser(){
+
+    private void logOutTheCurrentUser() {
         Log.d(TAG, "logOutTheCurrentUser: ");
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Log.d(TAG, "logOutTheCurrentUser: signOut currentUser and start the LoginActivity");
@@ -390,6 +395,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             Log.d(TAG, "updateLocation: mapViewFragment != null");
             this.mapViewFragment.moveCameraIn(latLng, 16);
+        }
+        getListOfRestaurants(latLng);
+    }
+
+    private void getListOfRestaurants(LatLng latLng) {
+        Log.d(TAG, "getListOfRestaurant: ");
+        String key = getResources().getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latLng.latitude + "," + latLng.longitude + "&radius=100&type=restaurant&key=" + key;
+        try {
+            Call<ResponseToPlace> call = mapsCallApi.getListOfRestaurants(url);
+            Log.d(TAG, "getListOfRest: " + url);
+
+            call.enqueue(new Callback<ResponseToPlace>() {
+                @Override
+                public void onResponse(Call<ResponseToPlace> call, Response<ResponseToPlace> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "getListOfRest onResponse: is Successfull");
+                        if (response.body() != null) {
+                            for (int j = 0; j < response.body().getResults().size(); j++) {
+                                String place_id = response.body().getResults().get(j).getPlaceId();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseToPlace> call, Throwable t) {
+                    Log.d(TAG, "getListOfRest onFailure: " + t.getMessage());
+                }
+
+
+            });
+        } catch (IllegalStateException | JsonSyntaxException exception) {
+            Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
         }
     }
 }
