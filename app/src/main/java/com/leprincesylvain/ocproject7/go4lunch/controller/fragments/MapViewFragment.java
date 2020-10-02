@@ -138,7 +138,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 int i = 0;
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    String documentId = documentSnapshot.getString("restaurantChoice") + documentSnapshot.getString("usernam");
+                                    String documentId = documentSnapshot.getString("restaurantChoice") + documentSnapshot.getString("userName");
                                     i++;
                                 }
                                 if (i > 0) {
@@ -162,12 +162,14 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            assert drawable != null;
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
         Bitmap bitmap = Bitmap.createBitmap(120,
                 120, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
+        assert drawable != null;
         drawable.setBounds(0, 0, 120, 120);
         drawable.draw(canvas);
 
