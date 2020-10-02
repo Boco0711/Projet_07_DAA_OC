@@ -156,8 +156,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                             }
                         });
             }
-
-
         }
     }
 
