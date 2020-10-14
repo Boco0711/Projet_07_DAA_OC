@@ -17,7 +17,6 @@ import java.util.List;
 
 public class RestaurantListViewFragment extends Fragment {
     private List<Restaurant> restaurantsList;
-    private RecyclerView mRecyclerView;
     private LatLng latLng;
 
     public RestaurantListViewFragment() {
@@ -36,9 +35,9 @@ public class RestaurantListViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_list_view, container, false);
         Context context = view.getContext();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(new MyRestaurantRecyclerViewAdapter(restaurantsList, latLng));
         return view;
     }
