@@ -289,10 +289,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showRestaurantListViewFragment() {
         Log.d(TAG, "showRestaurantListViewFragment: ");
-        this.restaurantListViewFragment = new RestaurantListViewFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("list", restaurantList);
-        mapViewFragment.setArguments(bundle);
+        if (this.restaurantListViewFragment == null) {
+            restaurantListViewFragment = new RestaurantListViewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("list", restaurantList);
+            bundle.putParcelable("position", latLng);
+            restaurantListViewFragment.setArguments(bundle);
+        }
         this.startTransactionFragment(this.restaurantListViewFragment);
     }
 
