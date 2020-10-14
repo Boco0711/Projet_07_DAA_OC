@@ -41,6 +41,8 @@
     <string name="change_language">Change language</string>
     <string name="choose_language">Choose Language…</string>
     <string name="open_until">"Open until "</string>
+    <string name="closed_until">"Closed, opening at "</string>
+    <string name="schedule_unavailable">Schedule not available</string>
     <string name="selected_language">English</string>
     <string name="hasChoose">" is eating at "</string>
     <string name="has_not_choose">" hasn't decided yet"</string>

@@ -43,4 +43,6 @@
     <string name="sign_in_with_google">S\'enregistrer avec Google</string>
     <string name="sign_in_with_twitter">S\'enregistrer avec Twitter</string>
     <string name="sign_in_with_email">S\'enregistrer avec email</string>
+    <string name="closed_until">"Fermé, ouvre à "</string>
+    <string name="schedule_unavailable">Horaire non disponible</string>
 </resources>
