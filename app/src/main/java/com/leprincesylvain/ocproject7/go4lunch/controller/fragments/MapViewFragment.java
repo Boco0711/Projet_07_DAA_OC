@@ -41,7 +41,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
     private Context mContext;
     private LatLng latLng;
-    private int zoom = 16;
+    private float zoom = 16;
     private List<Restaurant> restaurantList;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -104,7 +104,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMapType(R.raw.custommap);
         if (latLng != null) {
             Log.d(TAG, "onMapReady: latlng != null");
-            moveCameraIn(latLng, 16);
+            moveCameraIn(latLng, zoom);
         }
     }
 
@@ -117,20 +117,12 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void putMarkerOnMap(List<Restaurant> restaurants) {
-
         Log.d(TAG, "putMarkerOnMap: ");
-
         if (restaurants != null) {
-            Log.d(TAG, "putMarkerOnMap: " + restaurants.size());
             for (final Restaurant restaurant : restaurants) {
-                Log.d(TAG, "putMarkerOnMap: " + restaurant);
                 final String name = restaurant.getName();
-                String website = restaurant.getWebsite();
-                String address = restaurant.getFormatted_address();
-                String phoneNumber = restaurant.getFormatted_phone_number();
                 final double lat = Double.parseDouble(restaurant.getGeometry().getLocation().getLat());
                 final double lng = Double.parseDouble(restaurant.getGeometry().getLocation().getLng());
-
                 usersRef.whereEqualTo("restaurantChoice", restaurant.getName()).whereEqualTo("dateOfChoice", date)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -166,13 +158,11 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(120,
-                120, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(120,120, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         assert drawable != null;
         drawable.setBounds(0, 0, 120, 120);
         drawable.draw(canvas);
-
         return bitmap;
     }
 }

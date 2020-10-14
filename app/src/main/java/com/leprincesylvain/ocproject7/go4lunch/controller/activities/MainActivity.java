@@ -31,7 +31,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectionReference collectionReference = db.collection("Users");
 
     private int numberOfRestaurantFromPlaceCall = 0;
+    private String googleApiKey = getResources().getString(R.string.google_api_key);
     private int numberOfCallToDetail = 0;
 
     @Override
@@ -413,15 +413,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getListOfRestaurants(LatLng latLng) {
         Log.d(TAG, "getListOfRestaurant: ");
-        String key = getResources().getString(R.string.google_api_key);
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latLng.latitude + "," + latLng.longitude + "&radius=100&type=restaurant&key=" + key;
+        String placePreUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
+        String placePostUrl = "&radius=100&type=restaurant&key=";
+        String url = placePreUrl + latLng.latitude + "," + latLng.longitude + placePostUrl + googleApiKey;
         try {
             Call<ResponseToPlace> call = mapsCallApi.getListOfRestaurants(url);
-            Log.d(TAG, "getListOfRest: " + url);
-
             call.enqueue(new Callback<ResponseToPlace>() {
                 @Override
-                public void onResponse(Call<ResponseToPlace> call, Response<ResponseToPlace> response) {
+                public void onResponse(@NonNull Call<ResponseToPlace> call, @NonNull Response<ResponseToPlace> response) {
                     if (response.isSuccessful()) {
                         Log.d(TAG, "getListOfRest onResponse: is Successfull");
                         if (response.body() != null) {
@@ -434,9 +433,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-
                 @Override
-                public void onFailure(Call<ResponseToPlace> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseToPlace> call, @NonNull Throwable t) {
                     Log.d(TAG, "getListOfRest onFailure: " + t.getMessage());
                 }
 
@@ -449,35 +447,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getDetail(String placeId) {
         Log.d(TAG, "getDetail: ");
-
-        String url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeId + "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=" + getResources().getString(R.string.google_api_key);
+        String detailPreUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=";
+        String detailPostUrl = "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=";
+        String url = detailPreUrl + placeId + detailPostUrl + googleApiKey;
         Call<ResponseToDetail> call = mapsCallApi.getRestaurantDetails(url);
-
-        Log.d(TAG, "getDetail: " + url);
         call.enqueue(new Callback<ResponseToDetail>() {
             @Override
-            public void onResponse(Call<ResponseToDetail> call, Response<ResponseToDetail> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: is Successfull");
-                    if (response.body() != null) {
-                        numberOfCallToDetail++;
-                        Restaurant restaurant = response.body().getRestaurant();
-                        if (restaurant != null)
-                            restaurantList.add(restaurant);
-                        if (restaurant.getPhotos() != null)
-                            Log.d(TAG, "onResponse: photo != null");
-                    }
+            public void onResponse(@NonNull Call<ResponseToDetail> call, @NonNull Response<ResponseToDetail> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    numberOfCallToDetail++;
+                    Restaurant restaurant = response.body().getRestaurant();
+                    if (restaurant != null)
+                        restaurantList.add(restaurant);
                     if (mapViewFragment != null && numberOfCallToDetail == numberOfRestaurantFromPlaceCall) {
-                        Log.d(TAG, "onResponse: mapView != null");
                         mapViewFragment.setRestaurantList(restaurantList);
                         mapViewFragment.putMarkerOnMap(restaurantList);
                     }
                 }
             }
-
             @Override
-            public void onFailure(Call<ResponseToDetail> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+            public void onFailure(@NonNull Call<ResponseToDetail> call, @NonNull Throwable t) {
             }
         });
     }
