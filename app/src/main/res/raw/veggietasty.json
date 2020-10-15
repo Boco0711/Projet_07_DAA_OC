@@ -1,0 +1,179 @@
+{
+      "formatted_address" : "78 Rue la Fayette, 75009 Paris, France",
+      "formatted_phone_number" : "09 84 28 80 02",
+      "geometry" : {
+         "location" : {
+            "lat" : 48.876238,
+            "lng" : 2.345903
+         },
+         "viewport" : {
+            "northeast" : {
+               "lat" : 48.8776508802915,
+               "lng" : 2.347211180291502
+            },
+            "southwest" : {
+               "lat" : 48.87495291970851,
+               "lng" : 2.344513219708498
+            }
+         }
+      },
+      "name" : "Veggie Tasty",
+      "opening_hours" : {
+         "open_now" : true,
+         "periods" : [
+            {
+               "close" : {
+                  "day" : 1,
+                  "time" : "2100"
+               },
+               "open" : {
+                  "day" : 1,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 2,
+                  "time" : "2100"
+               },
+               "open" : {
+                  "day" : 2,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 3,
+                  "time" : "2100"
+               },
+               "open" : {
+                  "day" : 3,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 4,
+                  "time" : "2100"
+               },
+               "open" : {
+                  "day" : 4,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 5,
+                  "time" : "2100"
+               },
+               "open" : {
+                  "day" : 5,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 6,
+                  "time" : "1600"
+               },
+               "open" : {
+                  "day" : 6,
+                  "time" : "1200"
+               }
+            }
+         ],
+         "weekday_text" : [
+            "lundi: 12:00 – 21:00",
+            "mardi: 12:00 – 21:00",
+            "mercredi: 12:00 – 21:00",
+            "jeudi: 12:00 – 21:00",
+            "vendredi: 12:00 – 21:00",
+            "samedi: 12:00 – 16:00",
+            "dimanche: Fermé"
+         ]
+      },
+      "photos" : [
+         {
+            "height" : 2359,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAd3vouSe6qdOddVovVK6VL8JXG-3KFs-ZS_QWoJLSdJXeOtvmb4mKZFKBqcADKe8lDaYfVTl35OSh55mTazh_PBIQRnEb1eRfQ-31NG1l0HbiGhoUHmaLg5EgQyJqkVR0niyeQ1vjPEE",
+            "width" : 4192
+         },
+         {
+            "height" : 2305,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAlN78aHgj3ZlRtDo6VaQQwUnWB1q7pDTpKIlpuSZFlS_Q0EqdY7_wyvMml18hMpyRS59e4168goZ8Mbsl1qrVUhIQu3NXdN864v9Cg7gKifB39BoUh_Rd9JTCA-u5Lyv0mm_bIPWJCH4",
+            "width" : 4096
+         },
+         {
+            "height" : 2796,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAxYwR925ZEhGJbVPPW9TiHDllpEymmboS0jgu7StxLuvmxvZSP4rwz3EbZD0iuBfHrqCQDIMiLy89E4WN0HyxnxIQj7Ynii83t6PjBLTER2o8kBoUPVxDzUDEcYqujr5AP4zdu9Zq6AI",
+            "width" : 2795
+         },
+         {
+            "height" : 1702,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAlE1gxuKye0YpR_eNdfXkXMJ_aZrmHnDWhR3T5svzCPENBNxRI7mX9u1UnEMwHx4p756R0pxWF1O2vllGgnuSXBIQMbQg6-Qv3DQbKVtVZq7qRBoUAZMvyV7S7CUOKc7neZQILx-yygY",
+            "width" : 3024
+         },
+         {
+            "height" : 2976,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/117469906485994031875\"\u003eAlistair\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAZB0IsTSy_GgpKpttSRzzMkqbfiEkJsSSL-PnCk_7cUwiHNBpIepKuQrHMgWBruUflUFpEDf1La6-2PxZJIwO5xIQuOqm7uTo3ruPvNF4Ywqw9xoUd4liSwHRTmNOOaaKFWkjDRud8F0",
+            "width" : 3968
+         },
+         {
+            "height" : 1920,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103825441157006432404\"\u003eberkane El mamoun\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAn2X-mHoOQb4mfjJbl0LSe9CX_BxVyzJBo9GKLUuHO3E7EMWxUyxhInGbG8Y5iK8rmuyGEEUv--w-X5Y_t5dXbhIQg9kuyVmqDFE3eJhUCRXxMxoU4I2UsBjL0b8XukvjQ_fadz-Mu4U",
+            "width" : 2560
+         },
+         {
+            "height" : 4032,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/117931290354193840518\"\u003eGanna Lytvynenko Amorim\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAKnrlZgxYcTnyWDXAzuGla89x3DZzF1eA8UuDlnQickdOzexQhwS7aFSyyXdLOnYGwHJQJKWaRbPPhDaRTo7XYxIQiTMlWWDJBiuWuWPE6vBbbhoUJiPRbf5bd3_fosXugdVhNJAU7SU",
+            "width" : 3024
+         },
+         {
+            "height" : 3024,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAW7Oc_qV6B9lpJ1dsM8AX6c9J9v_Jwwq5Jlmd95xpNrvuQbO--6LN2tA_wD1ppU-rjabM0umhOxBGA_eSYJ3MoxIQVqE8pMmsQy0dv7Q7If0DlxoU2cyciQmqXiUfmv2hcLMegbwfCX4",
+            "width" : 3024
+         },
+         {
+            "height" : 4640,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/104921071049493172902\"\u003eDavid Koskas\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAzvo--KL6c__1VN3Bq-LB2S9uVTFlLnzA1lobFn62UvPl9na9u7RW4LL7d3SCSIHZIv8GmyjfrpvDzifY3SxLmBIQcUptl7nIzLkqCzcVkB4D-xoU5HFCj0YwJJLPLk6xrL_1AEELJ5Y",
+            "width" : 3480
+         },
+         {
+            "height" : 2796,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/107035275074451086448\"\u003eVeggie Tasty\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAs03DBD1UsHX6pI2JB5rdzG-rq8Qf3jh-lWtsjG1qqLuoGCoc_5-gsk22ycy7oJiN5EmDvDImNMODoklAXmeQHhIQr4RB_T8ammnxP7LC1TNDLhoUVmGhCPMhHFHbllbK-FM4dX7PVOQ",
+            "width" : 2795
+         }
+      ],
+      "rating" : 4.8,
+      "website" : "http://www.juicyandtasty.fr/"
+}

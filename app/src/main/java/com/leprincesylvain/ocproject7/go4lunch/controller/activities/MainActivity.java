@@ -40,16 +40,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
-import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToPlace;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -415,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getListOfRestaurants(LatLng latLng) {
-        Log.d(TAG, "getListOfRestaurant: ");
+        /*Log.d(TAG, "getListOfRestaurant: ");
         String placePreUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
         String placePostUrl = "&radius=100&type=restaurant&key=";
         String url = placePreUrl + latLng.latitude + "," + latLng.longitude + placePostUrl + googleApiKey;
@@ -444,6 +448,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IllegalStateException | JsonSyntaxException exception) {
             Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
         }
+         */
+        getJson();
     }
 
     private void getDetail(String placeId) {
@@ -470,5 +476,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFailure(@NonNull Call<ResponseToDetail> call, @NonNull Throwable t) {
             }
         });
+    }
+
+    private void getJson() {
+        String json;
+        try {
+            InputStream inputStream = getAssets().open("placenearbysearch.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+
+            json = new String(buffer, "UTF-8");
+            JSONArray jsonArray = new JSONArray(json);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String placeName = jsonObject.getString("name");
+            }
+            int[] ressources = {R.raw.hugo, R.raw.miranchitopaisa, R.raw.veggietasty};
+            for (int i : ressources) {
+                String myJson = getDetailOfJsonObject(this.getResources().openRawResource(i));
+                Restaurant restaurant = new Gson().fromJson(myJson, Restaurant.class);
+                restaurantList.add(restaurant);
+                if (mapViewFragment != null) {
+                    mapViewFragment.setRestaurantList(restaurantList);
+                    mapViewFragment.putMarkerOnMap(restaurantList);
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getDetailOfJsonObject(InputStream inputStream) {
+        try {
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes, 0, bytes.length);
+            return new String(bytes);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

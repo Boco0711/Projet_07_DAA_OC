@@ -1,0 +1,189 @@
+{
+      "formatted_address" : "12 Rue Papillon, 75009 Paris, France",
+      "formatted_phone_number" : "01 40 22 01 91",
+      "geometry" : {
+         "location" : {
+            "lat" : 48.8762778,
+            "lng" : 2.3472389
+         },
+         "viewport" : {
+            "northeast" : {
+               "lat" : 48.8776197302915,
+               "lng" : 2.348579030291502
+            },
+            "southwest" : {
+               "lat" : 48.8749217697085,
+               "lng" : 2.345881069708498
+            }
+         }
+      },
+      "name" : "Hugo",
+      "opening_hours" : {
+         "open_now" : true,
+         "periods" : [
+            {
+               "close" : {
+                  "day" : 0,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 0,
+                  "time" : "1900"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 1,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 1,
+                  "time" : "1900"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 2,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 2,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 3,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 3,
+                  "time" : "1900"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 4,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 4,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 5,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 5,
+                  "time" : "1900"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 6,
+                  "time" : "2300"
+               },
+               "open" : {
+                  "day" : 6,
+                  "time" : "1900"
+               }
+            }
+         ],
+         "weekday_text" : [
+            "lundi: 19:00 – 23:00",
+            "mardi: 12:00 – 23:00",
+            "mercredi: 19:00 – 23:00",
+            "jeudi: 12:00 – 23:00",
+            "vendredi: 19:00 – 23:00",
+            "samedi: 19:00 – 23:00",
+            "dimanche: 19:00 – 23:00"
+         ]
+      },
+      "photos" : [
+         {
+            "height" : 540,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/104512095282728295534\"\u003eHugo\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAu3KchqyMAJniPetL-29z92DLQhcV1MPLoafjjA3OcVvU6SFKuf8CBwGTF5QqXtHC_S-em7EEPyq3Xiwce7ORUBIQgZc9xhOUyu5RH_uNnxE5vxoUEiX6kDBz3k0ge1MFtLqzy4lqd6A",
+            "width" : 960
+         },
+         {
+            "height" : 563,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/104512095282728295534\"\u003eHugo\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAor6u7xpVD4CBKZFxHC7V3Rf0xfKpgt9dF3HHMBAuEkmfA9VYaIH5nkt2f9r0QOGJ7bfR7CEtoMWHdI0txLErlBIQUC2K0FKGbld3VCv4B9110RoUVpfesITo-CAJtnjhbuhiat4-hRo",
+            "width" : 957
+         },
+         {
+            "height" : 2448,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/118215781180067913890\"\u003eTui Saithip\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAASUBxl2tGUYZFSVpwe1HA65mQnCcBsa2UH8j6JAazmdaAruyEGrKr4fAbA05sYvATXweXkYJX9OzCqN-L3JQOeBIQyFAEkcWrk4Jz1A60RweTdhoU4TLlbUksJZdNjlYmZAlp6DnL5jY",
+            "width" : 3264
+         },
+         {
+            "height" : 3456,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/104512095282728295534\"\u003eHugo\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAv7y8saAY9UDo2uYSG-6M1uhbRJu3eYQd-XDvN3KCo_CMR95GThuor7NDWOOdA49bO3WsOKT1lj1sUiJWeP27KBIQcPRPK-qDmfrfetIjdPY2CxoU3AOV9bMqBtdEA-EDabxLay-bm94",
+            "width" : 4608
+         },
+         {
+            "height" : 4000,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/116573229010417154255\"\u003eMatthias Hewald\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAALPDdHe1nvj9WKI0s2pl5SVeqG5jC6MSw7ukrvRv5GA4AydXf-oneDwE00JxwlDZW7qHV0Jg0w_QvjzADPDkbvBIQANlvsT-g7bcSCQMhmWwSqxoUvVgvOeV-Q8R1Rx1pctajoUC0tek",
+            "width" : 3000
+         },
+         {
+            "height" : 3264,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/116115513951257431052\"\u003eSven Krumke\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAA6-JXUDgiBRpKQ89lVfBxBIY9h79PKTw4DLd2Ey6eKyf3AcGNt6i-jTKC0m6fCQGJj2ivoeUeOsB73EmEoCZ4lxIQdZf2qLfUnFHwUKV9d7_WJRoURvmEz4kjbS4QgkSl8PiaLfJyxlA",
+            "width" : 4896
+         },
+         {
+            "height" : 2448,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/117678795988528038837\"\u003eBOYI WU\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAViqUdNMX7rr9ubxf4odv6UFA4tszVn-BvFzjOevQz1mMvo8CJj6b2AJ-x58LVq9PjylUD5iHdM5ZHiHllIjqAxIQBNxVWhTpqsnM49xPisfrMBoUVOjjx0RCjz7uRCzDSzPd6X0392Y",
+            "width" : 2448
+         },
+         {
+            "height" : 3024,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/104892017801009250345\"\u003eOscar Fanelli\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAPSrXEfYJOs3MFKbFerV2yXdr4g2U-6jeuxrVMUSduvBEi3dsE2p_A_vNK9VF8UUeXr_WpXLcJQEf9kg0THoG9RIQQEl9nMinRCxicjZSxhruHxoUPPn9ZUOK0a7Zc5hPWDdBjVPD3CM",
+            "width" : 4032
+         },
+         {
+            "height" : 2340,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103961214583236176811\"\u003eJustin Louie\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAA053FVle45Ah5MSxmzCb4Tj_7sXeU-vAlA99Kqji95pzKcyhY87W_FvyFoJ7C986ulaVZKkmPoObB_sb9UHSkCxIQAMc7nF-jA7J2cl5LxnIwVhoUE7hiY_mHmAa3lKIIjEFxVQAM6GA",
+            "width" : 4160
+         },
+         {
+            "height" : 3310,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/106386970407656314288\"\u003ePierre Jordaan\u003c/a\u003e"
+            ],
+            "photo_reference" : "CkQ0AAAAGew0aTSuTeno8QvinPoniBLSaOrPm0np_1BkuF8OwBze-SdheC0RDnUyIEN3pIcCUTmL7Suqy-GipZO4c2FRBRIQ6EB2v84AQfF1HWISpGYRoxoUOGhpHMA6qVvJXKrZEr1EpqXKiEY",
+            "width" : 3308
+         }
+      ],
+      "rating" : 4.5,
+      "website" : "http://www.restohugo.com/"
+}
