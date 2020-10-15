@@ -440,8 +440,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onFailure(@NonNull Call<ResponseToPlace> call, @NonNull Throwable t) {
                     Log.d(TAG, "getListOfRest onFailure: " + t.getMessage());
                 }
-
-
             });
         } catch (IllegalStateException | JsonSyntaxException exception) {
             Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
