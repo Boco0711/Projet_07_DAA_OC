@@ -77,9 +77,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             latLng = getArguments().getParcelable("latlng");
             restaurantList = getArguments().getParcelableArrayList("list");
         }
-        if (restaurantList.size() > 0) {
-            putMarkerOnMap(restaurantList);
-        }
     }
 
     @Nullable
@@ -105,6 +102,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         if (latLng != null) {
             Log.d(TAG, "onMapReady: latlng != null");
             moveCameraIn(latLng, zoom);
+        }
+        if (restaurantList.size() > 0) {
+            putMarkerOnMap(restaurantList);
         }
     }
 
