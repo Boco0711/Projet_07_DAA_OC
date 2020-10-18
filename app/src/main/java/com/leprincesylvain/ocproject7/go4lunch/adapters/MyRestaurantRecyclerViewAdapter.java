@@ -85,11 +85,11 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             holder.mRestaurantImage.setImageResource(R.drawable.restaurant_no_image_found);
         }
 
-        displayCorrectSentence(holder, restaurant);
-
+        displayCorrectSentenceOnHourField(holder, restaurant);
         Double note = (restaurant.getRating());
         displayCorrectRatingForRestaurant(holder, note);
-
+        displayCorrectNumberOfCoworker(holder, restaurant);
+        
         holder.mRestaurantParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +98,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 v.getContext().startActivity(intent);
             }
         });
-        displayCorrectNumberOfCoworker(holder, restaurant);
+        
     }
 
     @Override
@@ -154,8 +154,8 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         return (baseUrl + reference + "&key=" + key);
     }
 
-    private void displayCorrectSentence(ViewHolder holder, Restaurant restaurant) {
-        Log.d(TAG, "displayCorrectHours: ");
+    private void displayCorrectSentenceOnHourField(ViewHolder holder, Restaurant restaurant) {
+        Log.d(TAG, "displayCorrectSentenceOnHourField: ");
         String heure = getCorrectSentence(restaurant);
         char firstLettreOfHeure = heure.charAt(0);
 
