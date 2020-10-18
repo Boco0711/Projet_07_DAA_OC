@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectionReference collectionReference = db.collection("Users");
 
     private int numberOfRestaurantFromPlaceCall = 0;
-    private String googleApiKey = getResources().getString(R.string.google_api_key);
+    private String googleApiKey;
     private int numberOfCallToDetail = 0;
 
     @Override
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        googleApiKey = getResources().getString(R.string.google_api_key);
         getUserDetails();
         if (userId != null) {
             createUserInFirestoreIfNotExisting();
@@ -479,6 +480,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getJson() {
+        Log.d(TAG, "getJson: ");
         String json;
         try {
             InputStream inputStream = getAssets().open("placenearbysearch.json");
@@ -499,10 +501,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String myJson = getDetailOfJsonObject(this.getResources().openRawResource(i));
                 Restaurant restaurant = new Gson().fromJson(myJson, Restaurant.class);
                 restaurantList.add(restaurant);
-                if (mapViewFragment != null) {
-                    mapViewFragment.setRestaurantList(restaurantList);
-                    mapViewFragment.putMarkerOnMap(restaurantList);
-                }
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -510,6 +508,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private String getDetailOfJsonObject(InputStream inputStream) {
+        Log.d(TAG, "getDetailOfJsonObject: ");
         try {
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, bytes.length);
