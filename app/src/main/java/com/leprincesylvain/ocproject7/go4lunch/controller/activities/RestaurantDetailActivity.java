@@ -1,5 +1,7 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -73,9 +75,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
 
         if (restaurant != null) {
-            giveToActivityTheRestaurantDetails(restaurant);
+            giveToActivityTheRestaurantDetails();
         }
-        getListOfcoWorkerEatingThere();
+        getListOfCoworkerEatingThere();
     }
 
     private void makeBinding() {
@@ -93,15 +95,16 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         restaurantRecyclerView = findViewById(R.id.detail_restaurant_list_coworkers);
     }
 
-    private void giveToActivityTheRestaurantDetails(Restaurant restaurant) {
+    private void giveToActivityTheRestaurantDetails() {
         mRestaurantName.setText(restaurant.getName());
         mRestaurantAddress.setText(restaurant.getFormatted_address());
-        setRestaurantPhoto(restaurant);
-        setRestaurantRating(restaurant);
+        setRestaurantPhoto();
+        setRestaurantRating();
         checkWhichRestaurantUserHasSelectedForNextLunch();
+        setListenerOnBoxes();
     }
 
-    private void setRestaurantPhoto(Restaurant restaurant) {
+    private void setRestaurantPhoto() {
         Log.d(TAG, "setRestaurantPhoto: ");
         String googleApiKey = getApplicationContext().getString(R.string.google_api_key);
         if (restaurant.getPhotos() != null && restaurant.getPhotos().get(0).getPhoto_reference().length() > 0) {
@@ -116,7 +119,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setRestaurantRating(Restaurant restaurant) {
+    private void setRestaurantRating() {
         if (restaurant.getRating() != null) {
             double avis = (restaurant.getRating() * 3) / 5;
             if (avis > 0.5) {
@@ -183,11 +186,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void getListOfcoWorkerEatingThere() {
+    private void getListOfCoworkerEatingThere() {
         Log.d(TAG, "getListOfcoWorkerEatingThere: ");
         Query query = collectionReference
                 .whereEqualTo("restaurantChoice", restaurant.getName())
-                .whereEqualTo( "dateOfChoice", date);
+                .whereEqualTo("dateOfChoice", date);
 
         FirestoreRecyclerOptions<Workmate> options = new FirestoreRecyclerOptions.Builder<Workmate>()
                 .setQuery(query, Workmate.class)
@@ -198,6 +201,49 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         restaurantRecyclerView.setHasFixedSize(false);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         restaurantRecyclerView.setAdapter(workmatesAdapter);
+    }
+
+    private void setListenerOnBoxes() {
+        Log.d(TAG, "setListenerOnBoxes: ");
+        if (restaurant.getWebsite() != null) {
+            visitWebsite();
+        }
+        if (restaurant.getFormatted_phone_number() != null) {
+            callRestaurant();
+        }
+        giveThisRestaurantALike();
+    }
+
+    private void visitWebsite() {
+        mRestaurantWebsiteBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getWebsite()));
+                startActivity(browserIntent);
+            }
+        });
+    }
+
+
+    public void callRestaurant() {
+        mRestaurantCallBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+                // sur le click du bouton déclencher ouverture de l'application appel avec précomposition du numéro du restaurant
+            }
+        });
+    }
+
+
+    public void giveThisRestaurantALike() {
+        mRestaurantLikeBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+                // Ajouter un like (une fois par utilisateur) au restaurant dans firebase
+            }
+        });
     }
 
     @Override
