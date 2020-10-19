@@ -43,6 +43,7 @@ import com.google.gson.GsonBuilder;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MyLunchFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.WorkmatesFragment;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
@@ -315,6 +316,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showMyLunchFragment() {
         Log.d(TAG, "showMyLunchFragment: ");
+        if (this.myLunchFragment == null) {
+            Log.d(TAG, "showMyLunchFragment: null");
+            myLunchFragment = new MyLunchFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("list", restaurantList);
+            myLunchFragment.setArguments(bundle);
+        }
+        this.startTransactionFragment(myLunchFragment);
     }
 
     private void showSettingsFragment() {
