@@ -75,6 +75,7 @@
         app:layout_constraintTop_toBottomOf="@id/restaurant_name"
         app:layout_constraintBottom_toTopOf="@id/restaurant_open_hours"
         app:layout_constraintRight_toLeftOf="@id/restaurant_image"
+        android:layout_marginEnd="@dimen/restaurant_Restaurant_Distance_Margin_End"
         >
 
         <ImageView
