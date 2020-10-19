@@ -44,6 +44,7 @@ import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.WorkmatesFragment;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.squareup.picasso.Picasso;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Fragment Declaration
     private MapViewFragment mapViewFragment = (MapViewFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
     private Fragment restaurantListViewFragment;
-    private Fragment workmatesListViewFragment;
+    private Fragment workmatesFragment;
     private Fragment myLunchFragment;
     private Fragment settingsFragment;
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // User Details
     private static final String KEY_USERNAME = "userName";
     private static final String KEY_USERMAIL = "userMail";
-    private static final String KEY_USERPICTURE = "userProfilPicture";
+    private static final String KEY_USERPICTURE = "userProfilePicture";
     private String userId;
     private String username;
     private String userPicture;
@@ -306,6 +307,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showCoworkerListViewFragment() {
         Log.d(TAG, "showCoworkerListViewFragment: ");
+        if (this.workmatesFragment == null) {
+            workmatesFragment = new WorkmatesFragment();
+        }
+        this.startTransactionFragment(this.workmatesFragment);
     }
 
     private void showMyLunchFragment() {
