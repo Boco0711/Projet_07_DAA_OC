@@ -10,7 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,10 +23,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 import com.leprincesylvain.ocproject7.go4lunch.R;
+import com.leprincesylvain.ocproject7.go4lunch.adapters.WorkmatesAdapter;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
+import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -37,6 +43,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private LinearLayout mRestaurantCallBox, mRestaurantLikeBox, mRestaurantWebsiteBox;
     private TextView mRestaurantName, mRestaurantAddress;
     private FloatingActionButton mRestaurantSelect;
+    private RecyclerView restaurantRecyclerView;
 
     private Restaurant restaurant;
 
@@ -53,6 +60,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private int imageNumber;
     private int[] images = {R.drawable.restaurant_unselected, R.drawable.restaurant_selected};
 
+    private WorkmatesAdapter workmatesAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +75,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (restaurant != null) {
             giveToActivityTheRestaurantDetails(restaurant);
         }
+        getListOfcoWorkerEatingThere();
     }
 
     private void makeBinding() {
@@ -80,6 +90,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestaurantName = findViewById(R.id.detail_restaurant_name);
         mRestaurantAddress = findViewById(R.id.detail_restaurant_adresse);
         mRestaurantSelect = findViewById(R.id.detail_restaurant_select);
+        restaurantRecyclerView = findViewById(R.id.detail_restaurant_list_coworkers);
     }
 
     private void giveToActivityTheRestaurantDetails(Restaurant restaurant) {
@@ -163,13 +174,41 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 if (imageNumber == 0) {
                     user.put(KEY_RESTAURANTCHOICE, "");
                     user.put(KEY_DATEOFCHOICE, 0);
-                    userReference.set(user, SetOptions.merge());
                 } else {
                     user.put(KEY_RESTAURANTCHOICE, restaurantName);
                     user.put(KEY_DATEOFCHOICE, dateOfToday);
-                    userReference.set(user, SetOptions.merge());
                 }
+                userReference.set(user, SetOptions.merge());
             }
         });
+    }
+
+    private void getListOfcoWorkerEatingThere() {
+        Log.d(TAG, "getListOfcoWorkerEatingThere: ");
+        Query query = collectionReference
+                .whereEqualTo("restaurantChoice", restaurant.getName())
+                .whereEqualTo( "dateOfChoice", date);
+
+        FirestoreRecyclerOptions<Workmate> options = new FirestoreRecyclerOptions.Builder<Workmate>()
+                .setQuery(query, Workmate.class)
+                .build();
+
+        workmatesAdapter = new WorkmatesAdapter(options, restaurant.getName());
+
+        restaurantRecyclerView.setHasFixedSize(false);
+        restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        restaurantRecyclerView.setAdapter(workmatesAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        workmatesAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        workmatesAdapter.stopListening();
     }
 }
