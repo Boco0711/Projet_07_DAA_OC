@@ -273,7 +273,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                         }
                         String numberOfCoworker = "(" + j + ")";
                         if (j > 0) {
-                            holder.mRestaurantCoworkers.setVisibility(View.VISIBLE);
+                            holder.mRestaurantImageCoworkers.setVisibility(View.VISIBLE);
                             holder.mRestaurantCoworkers.setText(numberOfCoworker);
                         }
                     }
