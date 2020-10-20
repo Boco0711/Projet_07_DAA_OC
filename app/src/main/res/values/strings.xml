@@ -57,4 +57,5 @@
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="sign_in_with_email">Sign in with email</string>
+    <string name="see_restaurant_details">See the restaurant page</string>
 </resources>

@@ -45,4 +45,5 @@
     <string name="sign_in_with_email">S\'enregistrer avec email</string>
     <string name="closed_until">"Fermé, ouvre à "</string>
     <string name="schedule_unavailable">Horaire non disponible</string>
+    <string name="see_restaurant_details">Voir la page du restaurant</string>
 </resources>
