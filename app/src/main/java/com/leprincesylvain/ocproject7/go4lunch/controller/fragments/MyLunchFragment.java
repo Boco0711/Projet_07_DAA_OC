@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ public class MyLunchFragment extends Fragment {
     long date = GetDate.getDate();
 
     private TextView restaurantName;
+    private Button restaurantDetailButton;
     private List<Restaurant> restaurantList;
 
     @Override
@@ -57,34 +59,51 @@ public class MyLunchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_mylunch, container, false);
-        restaurantName = view.findViewById(R.id.text_selected_restaurant);
-
-        checkIfUserHasSelectedARestaurant();
+        restaurantName = view.findViewById(R.id.my_lunch_selected_restaurant_text);
+        restaurantDetailButton = view.findViewById(R.id.my_lunch_detail_button);
+        getIfUserHasSelectedARestaurant();
         return view;
     }
 
-    private void checkIfUserHasSelectedARestaurant() {
+    private void getIfUserHasSelectedARestaurant() {
         Log.d(TAG, "checkIfUserHasSelectedARestaurant: ");
         userReference.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-
                             String choiceOfRestaurant = documentSnapshot.getString(KEY_RESTAURANTCHOICE);
                             long dateOfChoice = documentSnapshot.getLong(KEY_DATEOFCHOICE);
-                            Log.d(TAG, "onSuccess: 1 " + choiceOfRestaurant + " " + dateOfChoice);
-                            for (Restaurant restaurant : restaurantList) {
-                                if ((restaurant.getName().equalsIgnoreCase(choiceOfRestaurant)) && (date == dateOfChoice)) {
-                                    Log.d(TAG, "onSuccess: 2");
-                                    Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
-                                    intent.putExtra("restaurant", restaurant);
-                                    requireContext().startActivity(intent);
-                                }
-                            }
-
+                            getRestaurantIfExist(choiceOfRestaurant, dateOfChoice);
                         }
                     }
                 });
+    }
+
+    private void getRestaurantIfExist(String choiceOfRestaurant, long dateOfChoice) {
+        Log.d(TAG, "getRestaurantIfExist: ");
+        int i = 0;
+        for (final Restaurant restaurant : restaurantList) {
+            if ((restaurant.getName().equalsIgnoreCase(choiceOfRestaurant)) && (date == dateOfChoice)) {
+                i++;
+                Log.d(TAG, "onSuccess: 2");
+                restaurantDetailButton.setText(R.string.see_restaurant_details);
+                String willEatAt = requireContext().getString(R.string.selected_a_restaurant_mylunch) + choiceOfRestaurant;
+                restaurantName.setText(willEatAt);
+                restaurantDetailButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(requireContext(), RestaurantDetailActivity.class);
+                        intent.putExtra("restaurant", restaurant);
+                        requireContext().startActivity(intent);
+                    }
+                });
+            }
+        }
+        if (i == 0) {
+            Log.d(TAG, "onSuccess: " + i);
+            restaurantName.setText(requireContext().getString(R.string.not_selected_restaurant_mylunch));
+            restaurantDetailButton.setVisibility(View.GONE);
+        }
     }
 }
