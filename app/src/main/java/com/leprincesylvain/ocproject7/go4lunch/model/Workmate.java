@@ -9,6 +9,7 @@ public class Workmate implements Parcelable {
     private String userName;
     private String userMail;
     private String restaurantChoice;
+    private String restaurantId;
     private int dateOfChoice;
 
     public Workmate() {
@@ -46,6 +47,10 @@ public class Workmate implements Parcelable {
 
     public String getRestaurantChoice() {
         return restaurantChoice;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
     public int getDateOfChoice() {

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant implements Parcelable {
+    private String id;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -76,7 +78,16 @@ public class Restaurant implements Parcelable {
         return rating;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Restaurant(Parcel in) {
+        id = in.readString();
         name = in.readString();
         formatted_address = in.readString();
         formatted_phone_number = in.readString();
@@ -105,6 +116,7 @@ public class Restaurant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(formatted_address);
         dest.writeString(formatted_phone_number);

@@ -57,6 +57,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private static final String KEY_RESTAURANTCHOICE = "restaurantChoice";
     private static final String KEY_DATEOFCHOICE = "dateOfChoice";
+    private static final String KEY_RESTAURANTID = "restaurantId";
     long date = GetDate.getDate();
 
     private int imageNumber;
@@ -77,7 +78,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (restaurant != null) {
             giveToActivityTheRestaurantDetails();
         }
-        getListOfCoworkerEatingThere();
     }
 
     private void makeBinding() {
@@ -102,6 +102,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         setRestaurantRating();
         checkWhichRestaurantUserHasSelectedForNextLunch();
         setListenerOnBoxes();
+        getListOfCoworkerEatingThere();
     }
 
     private void setRestaurantPhoto() {
@@ -160,6 +161,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void selectThisRestaurant(String restaurantChoice, long dateOfChoice) {
         final long dateOfToday = this.date;
         final String restaurantName = restaurant.getName();
+        final String restaurantId = restaurant.getId();
         if (!restaurantName.equalsIgnoreCase(restaurantChoice) || date != dateOfChoice) {
             mRestaurantSelect.setImageResource(R.drawable.restaurant_unselected);
             imageNumber = 0;
@@ -176,9 +178,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 mRestaurantSelect.setImageResource(images[imageNumber]);
                 if (imageNumber == 0) {
                     user.put(KEY_RESTAURANTCHOICE, "");
+                    user.put(KEY_RESTAURANTID, "");
                     user.put(KEY_DATEOFCHOICE, 0);
                 } else {
                     user.put(KEY_RESTAURANTCHOICE, restaurantName);
+                    user.put(KEY_RESTAURANTID, restaurantId);
                     user.put(KEY_DATEOFCHOICE, dateOfToday);
                 }
                 userReference.set(user, SetOptions.merge());
