@@ -13,14 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 import com.squareup.picasso.Picasso;
 
-public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, WorkmatesAdapter.WorkmatesHolder>  {
+public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, WorkmatesAdapter.WorkmatesHolder> {
     private static final String TAG = "WorkmateAdapter_TAG";
     private String restaurantName;
     long dateOfToday = GetDate.getDate();
@@ -46,6 +45,7 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
         String workmateName = workmate.getUserName();
         String workmateRestaurantChoice = workmate.getRestaurantChoice();
         int workmateDateOfChoice = workmate.getDateOfChoice();
+        String workmateRestaurantChoiceId = workmate.getRestaurantId();
 
         String hasSelectedThisRestaurant = workmateName + context.getString(R.string.is_joining);
         String hasChooseARestaurant = workmateName + context.getString(R.string.hasChoose) + workmateRestaurantChoice;
@@ -59,6 +59,12 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
             } else {
                 Log.d(TAG, "onBindViewHolder: if else");
                 workmatesHolder.mWorkmateText.setText(hasChooseARestaurant);
+                workmatesHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
             }
             Typeface bold = Typeface.defaultFromStyle(Typeface.BOLD);
             workmatesHolder.mWorkmateText.setTypeface(bold);
