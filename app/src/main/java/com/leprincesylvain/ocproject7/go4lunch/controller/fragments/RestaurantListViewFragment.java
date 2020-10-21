@@ -2,6 +2,7 @@ package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import java.util.List;
 
 public class RestaurantListViewFragment extends Fragment {
+    public static final String TAG = "TAG";
     private List<Restaurant> restaurantsList;
     private LatLng latLng;
 
