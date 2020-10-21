@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Ui component
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private BottomNavigationView bottomNavigationView;
 
     // Fragment iD
     public static final int MAPVIEW_FRAGMENT = R.id.bottom_nav_mapview;
@@ -207,16 +210,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void configureBottomNavigationView() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+        bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 callShowProperFragment(item.getItemId());
+                bottomNavigationView.getMenu().setGroupCheckable(0, true, true);
                 return true;
             }
         });
@@ -240,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logOutTheCurrentUser();
         } else {
             callShowProperFragment(itemId);
+            bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
         }
         this.drawer.closeDrawer(GravityCompat.START);
 
@@ -467,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getJson();
     }
 
-    private void getDetail(String placeId) {
+    public void getDetail(final String placeId) {
         Log.d(TAG, "getDetail: ");
         String detailPreUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=";
         String detailPostUrl = "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=";
@@ -479,8 +484,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful() && response.body() != null) {
                     numberOfCallToDetail++;
                     Restaurant restaurant = response.body().getRestaurant();
-                    if (restaurant != null)
-                        restaurantList.add(restaurant);
+                    restaurant.setId(placeId);
+                    restaurantList.add(restaurant);
                     if (mapViewFragment != null && numberOfCallToDetail == numberOfRestaurantFromPlaceCall) {
                         mapViewFragment.setRestaurantList(restaurantList);
                         mapViewFragment.putMarkerOnMap(restaurantList);
@@ -511,11 +516,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String placeName = jsonObject.getString("name");
             }
             int[] ressources = {R.raw.hugo, R.raw.miranchitopaisa, R.raw.veggietasty};
+            List<String> ressourcesId = new ArrayList<>();
+            ressourcesId.add("ChIJw0QnSxVu5kcRYvvj231mXv8");
+            ressourcesId.add("ChIJidCwC0Bu5kcRhyADcTSSsrY");
+            ressourcesId.add("ChIJOd3F_j9u5kcR58fp0EX2S2c");
+            int j = 0;
             for (int i : ressources) {
                 String myJson = getDetailOfJsonObject(this.getResources().openRawResource(i));
+                String id = ressourcesId.get(j);
                 Restaurant restaurant = new Gson().fromJson(myJson, Restaurant.class);
+                restaurant.setId(id);
                 restaurantList.add(restaurant);
+                j++;
             }
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
