@@ -299,6 +299,8 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         int numberOfService = 0;
         String returned;
         List<Period> periodList = new ArrayList<>();
+        if (restaurant.getOpeningHours() == null)
+            return "Schedul unaivalble";
         if (restaurant.getOpeningHours().getPeriod().length == 1) {
             returned = "TOTO";
             for (Period period : restaurant.getOpeningHours().getPeriod()) {
@@ -357,7 +359,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                     closedMod = 1440;
                 Log.d(TAG, "openNowGetClosingHours: " + openMod + " " + closedMod + " " + i);
                 i++;
-                if ((currentHourAsInt >= openMod && currentHourAsInt < closedMod) || (currentHourAsInt < openMod && currentHourAsInt < closedMod && closedMod < openMod) || (currentHourAsInt < closedMod && openDay != intOfToday && intOfToday == closedDay) || (currentHourAsInt > openMod && intOfToday != closedDay)) {
+                if ((currentHourAsInt >= openMod && currentHourAsInt < closedMod) || (currentHourAsInt < openMod && currentHourAsInt < closedMod && closedMod < openMod) || (currentHourAsInt < closedMod && openDay != intOfToday && intOfToday == closedDay) || (currentHourAsInt >= openMod && intOfToday != closedDay)) {
                     if (currentHourAsInt >= closedMod - 15 && closedMod > currentHourAsInt) {
                         Log.d(TAG, "openNowGetClosingHours: " + currentHourAsInt + " " + closedMod);
                         closingHour = "W";
@@ -383,12 +385,12 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 int openPostMod = castIntToAnotherInt(openPreMod);
                 int closedPostMod = castIntToAnotherInt(closedPreMod);
                 if (currentHourAsInt < openPostMod) {
-                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI " + restaurant.getName());
+                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI 1 " + restaurant.getName());
                     openingHour = period.getOpen().getTime();
                     isFirst++;
                 }
-                if (currentHourAsInt > closedPostMod && intOfToday == closedDay) {
-                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI" + restaurant.getName());
+                if (currentHourAsInt >= closedPostMod && intOfToday == closedDay) {
+                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI 2 " + restaurant.getName());
                     isLast++;
                 }
                 if ((currentHourAsInt < openPostMod && openDay != intOfToday && currentHourAsInt < closedPostMod && intOfToday == closedDay) || (currentHourAsInt > openPostMod && intOfToday != closedDay)) {// && currentHourAsInt > closedPostMod && intOfToday != closedDay && currentHourAsInt > openPostMod) {
@@ -407,11 +409,12 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             dayWriten = indexDayToDayWritten(indexOfDay);
             openingHour = "C" + periodList.get(0).getOpen().getTime() + dayWriten;
         } else {
-            Log.d(TAG, "closedNowGetOpeningHours: 3");
+
+            int indexOfPeriod = periodList.size() - isFirst;
             indexOfDay = periodList.get(0).getOpen().getDay();
             dayWriten = indexDayToDayWritten(indexOfDay);
             openingHour = "C" + periodList.get(isLast).getOpen().getTime() + dayWriten;
-
+            Log.d(TAG, "closedNowGetOpeningHours: else isFirst=" + isFirst + " isLast=" + isLast + " indexOfPeriod=" + indexOfPeriod + " periodList.size()=" + periodList.size());
         }
         return openingHour;
     }
