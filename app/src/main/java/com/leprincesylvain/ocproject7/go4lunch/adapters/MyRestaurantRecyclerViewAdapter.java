@@ -295,19 +295,19 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
 
     // Ici ça merde parce que lorsqu'on change de jour, on recupère directement les données du jour suivant et si des horaire sont après minuit pour le
 
+
     private String getNumberOfServiceToday(Restaurant restaurant) {
         int numberOfService = 0;
         String returned;
         List<Period> periodList = new ArrayList<>();
+
         if (restaurant.getOpeningHours() == null)
-            return "Schedul unaivalble";
-        if (restaurant.getOpeningHours().getPeriod().length == 1) {
-            returned = "TOTO";
-            for (Period period : restaurant.getOpeningHours().getPeriod()) {
-                if (period.getClose() == null) {
-                    return "Open 24/7";
-                }
-            }
+            return context.getResources().getString(R.string.schedule_unavailable);
+
+        Period[] periods = restaurant.getOpeningHours().getPeriod();
+
+        if (restaurant.getOpeningHours().getPeriod().length == 1 && periods[0].getClose() == null) {
+            returned = "Open 24/7";
         } else {
             for (Period period : restaurant.getOpeningHours().getPeriod()) {
                 if (period.getClose() != null) {
@@ -318,29 +318,20 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 }
             }
             if (numberOfService > 0) {
-                Log.d(TAG, "getNumberOfServiceToday: serviceToday " + numberOfService);
                 returned = oneServicesOrMore(periodList, restaurant);
-                returned = correctSentence(returned);
             } else {
-                Log.d(TAG, "getNumberOfServiceToday: noServiceToday");
                 returned = noServiceToday(restaurant);
-                returned = correctSentence(returned);
             }
+            returned = correctSentence(returned);
         }
-        Log.d(TAG, "getNumberOfServiceToday: " + restaurant.getName() + " " + returned + " " + restaurant.getOpeningHours().getPeriod().length);
         return returned;
     }
 
     private String oneServicesOrMore(List<Period> periodList, Restaurant restaurant) {
         String closingHour = openNowGetClosingHours(periodList);
-
         if (closingHour.equalsIgnoreCase("")) {
-            Log.d(TAG, "oneServicesOrMore: periodListsize " + periodList.size() + " closing hour string " + closingHour);
-            String openingHour = closedNowGetOpeningHours(periodList, restaurant);
-            Log.d(TAG, "oneServicesOrMore: " + restaurant.getName() + " " + openingHour);
-            return openingHour;
+            return closedNowGetOpeningHours(periodList, restaurant);
         } else {
-            Log.d(TAG, "oneServicesOrMore: " + restaurant.getName() + " " + closingHour);
             return closingHour;
         }
     }
@@ -349,113 +340,70 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         String closingHour;
         int i = 0;
         for (Period period : periodList) {
-                int openDay = period.getOpen().getDay();
-                int closedDay = period.getClose().getDay();
-                int open = castStringToInt(period.getOpen().getTime());
-                int closed = castStringToInt(period.getClose().getTime());
-                int openMod = castIntToAnotherInt(open);
-                int closedMod = castIntToAnotherInt(closed);
-                if (closedMod == 0)
-                    closedMod = 1440;
-                Log.d(TAG, "openNowGetClosingHours: " + openMod + " " + closedMod + " " + i);
-                i++;
-                if ((currentHourAsInt >= openMod && currentHourAsInt < closedMod) || (currentHourAsInt < openMod && currentHourAsInt < closedMod && closedMod < openMod) || (currentHourAsInt < closedMod && openDay != intOfToday && intOfToday == closedDay) || (currentHourAsInt >= openMod && intOfToday != closedDay)) {
-                    if (currentHourAsInt >= closedMod - 15 && closedMod > currentHourAsInt) {
-                        Log.d(TAG, "openNowGetClosingHours: " + currentHourAsInt + " " + closedMod);
-                        closingHour = "W";
-                    } else
-                        closingHour = "O" + period.getClose().getTime();
-                    Log.d(TAG, "openNowGetClosingHours: " + currentHourAsInt + " " + closedMod);
-                    return closingHour;
+            int openingDay = period.getOpen().getDay();
+            int closingDay = period.getClose().getDay();
+            int openingHourModified = castIntToAnotherInt(castStringToInt(period.getOpen().getTime()));
+            int closingHourModified = castIntToAnotherInt(castStringToInt(period.getClose().getTime()));
+            if (closingHourModified == 0)
+                closingHourModified = 1440;
+            i++;
+            boolean isOpenNow = isCurrentlyOpen(openingHourModified, closingHourModified, openingDay, closingDay);
+            if (isOpenNow) {
+                if (currentHourAsInt >= closingHourModified - 15 && closingHourModified > currentHourAsInt) {
+                    closingHour = "W";
+                } else {
+                    closingHour = "O" + period.getClose().getTime();
                 }
+                return closingHour;
+            }
         }
         return "";
     }
 
+    private boolean isCurrentlyOpen(int openingHour, int closingHour, int openDay, int closeDay) {
+        boolean isOpenNow = false;
+        if (currentHourAsInt >= openingHour && currentHourAsInt < closingHour)
+            isOpenNow = true;
+        if (currentHourAsInt < openingHour && currentHourAsInt < closingHour && closingHour < openingHour)
+            isOpenNow = true;
+        if (currentHourAsInt < closingHour && openDay != intOfToday && intOfToday == closeDay)
+            isOpenNow = true;
+        if (currentHourAsInt >= openingHour && intOfToday != closeDay)
+            isOpenNow = true;
+        return isOpenNow;
+    }
+
     private String closedNowGetOpeningHours(List<Period> periodList, Restaurant restaurant) {
         String openingHour;
+        String dayWriten;
         int isFirst = 0;
         int isLast = 0;
+        int indexOfDay;
         for (Period period : periodList) {
             if (period.getClose() != null) {
                 int openDay = period.getClose().getDay();
                 int closedDay = period.getClose().getDay();
-                int openPreMod = castStringToInt(period.getOpen().getTime());
-                int closedPreMod = castStringToInt(period.getClose().getTime());
-                int openPostMod = castIntToAnotherInt(openPreMod);
-                int closedPostMod = castIntToAnotherInt(closedPreMod);
+                int openPostMod = castIntToAnotherInt(castStringToInt(period.getOpen().getTime()));
+                int closedPostMod = castIntToAnotherInt(castStringToInt(period.getClose().getTime()));
                 if (currentHourAsInt < openPostMod) {
-                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI 1 " + restaurant.getName());
-                    openingHour = period.getOpen().getTime();
                     isFirst++;
                 }
                 if (currentHourAsInt >= closedPostMod && intOfToday == closedDay) {
-                    Log.d(TAG, "closedNowGetOpeningHours: PAS ICI 2 " + restaurant.getName());
                     isLast++;
-                }
-                if ((currentHourAsInt < openPostMod && openDay != intOfToday && currentHourAsInt < closedPostMod && intOfToday == closedDay) || (currentHourAsInt > openPostMod && intOfToday != closedDay)) {// && currentHourAsInt > closedPostMod && intOfToday != closedDay && currentHourAsInt > openPostMod) {
-                    Log.d(TAG, "closedNowGetOpeningHours: ICI NORMALEMENT" + restaurant.getName());
                 }
             }
         }
-        int indexOfDay;
-        String dayWriten;
         if (isLast == periodList.size()) {
-            Log.d(TAG, "closedNowGetOpeningHours: 1");
             openingHour = "C" + getFirstPeriodOfNextDayWithService(intOfToday, restaurant);
-        } else if (isFirst == periodList.size()) {
-            Log.d(TAG, "closedNowGetOpeningHours: 2");
-            indexOfDay = periodList.get(0).getOpen().getDay();
-            dayWriten = indexDayToDayWritten(indexOfDay);
-            openingHour = "C" + periodList.get(0).getOpen().getTime() + dayWriten;
         } else {
-
-            int indexOfPeriod = periodList.size() - isFirst;
             indexOfDay = periodList.get(0).getOpen().getDay();
-            dayWriten = indexDayToDayWritten(indexOfDay);
-            openingHour = "C" + periodList.get(isLast).getOpen().getTime() + dayWriten;
-            Log.d(TAG, "closedNowGetOpeningHours: else isFirst=" + isFirst + " isLast=" + isLast + " indexOfPeriod=" + indexOfPeriod + " periodList.size()=" + periodList.size());
+            if (isFirst == periodList.size()) {
+                openingHour = "C" + periodList.get(0).getOpen().getTime() + indexDayToDayWritten(indexOfDay);
+            } else {
+                openingHour = "C" + periodList.get(isLast).getOpen().getTime() + indexDayToDayWritten(indexOfDay);
+            }
         }
         return openingHour;
-    }
-
-    private String indexDayToDayWritten(int indexOfDay) {
-        String dayWritten;
-        switch (indexOfDay) {
-            case 0:
-                dayWritten = " (Sun)";
-                break;
-            case 1:
-                dayWritten = " (Mon)";
-                break;
-            case 2:
-                dayWritten = " (Tue)";
-                break;
-            case 3:
-                dayWritten = " (Wed)";
-                break;
-            case 4:
-                dayWritten = " (Thu)";
-                break;
-            case 5:
-                dayWritten = " (Fri)";
-                break;
-            case 6:
-                dayWritten = " (Sat)";
-                break;
-            default:
-                dayWritten = "noEntryFound";
-                break;
-        }
-        return dayWritten;
-    }
-
-    private int castIntToAnotherInt(int i) {
-        int hours = i / 100;
-        int minutes = i % 100;
-        hours = hours * 60;
-        int plop = hours + minutes;
-        return plop;
     }
 
     private String noServiceToday(Restaurant restaurant) {
@@ -463,44 +411,32 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
     }
 
     private String getFirstPeriodOfNextDayWithService(int day, Restaurant restaurant) {
-        String time = new String();
+        String time;
         do {
-            Log.d(TAG, "getFirstPeriodOfNextDayWithService: " + day);
             day++;
             if (day == 7)
                 day = 0;
-        } while (!noPeriodeThisDay(day, restaurant));
-        String dayWritten;
+        } while (!noPeriodThisDay(day, restaurant));
         for (Period period : restaurant.getOpeningHours().getPeriod()) {
-            Log.d(TAG, "getFirstPeriodOfNextDayWithService: " + day);
             if (day == period.getOpen().getDay()) {
-                dayWritten = indexDayToDayWritten(day);
-                time = period.getOpen().getTime() + dayWritten;
-                Log.d(TAG, "getFirstPeriodOfNextDayWithService: " + time);
+                time = period.getOpen().getTime() + indexDayToDayWritten(day);
                 return time;
             }
         }
-        return "time";
+        return "Next Open Day Have Not Been Found";
     }
 
-    private boolean noPeriodeThisDay(int day, Restaurant restaurant) {
-
-        boolean isOpen = false;
+    private boolean noPeriodThisDay(int day, Restaurant restaurant) {
+        boolean isOpenToday = false;
         for (Period period : restaurant.getOpeningHours().getPeriod()) {
             if (day == period.getOpen().getDay()) {
-                isOpen = true;
+                isOpenToday = true;
             }
         }
-        Log.d(TAG, "noPeriodeThisDay: " + day + " " + isOpen);
-        return isOpen;
-    }
-
-    private int castStringToInt(String hours) {
-        return Integer.parseInt(hours);
+        return isOpenToday;
     }
 
     private String correctSentence(String string) {
-        Log.d(TAG, "correctSentence: " + string);
         char firstLetter = string.charAt(0);
         if (firstLetter == 87) {
             string = "Closing soon !";
@@ -508,13 +444,10 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         }
         String day = string.substring(5);
         string = string.substring(1, 3) + ":" + string.substring(3, 5);
-        Log.d(TAG, "correctSentence: " + string);
         string = getCorrectOpeningOrClosingHour(string);
         if (firstLetter == 79) {
-            Log.d(TAG, "correctSentence: " + string);
             string = context.getString(R.string.open_until) + string;
         } else if (firstLetter == 67) {
-            Log.d(TAG, "correctSentence: " + day);
             string = context.getString(R.string.closed_until) + string + day;
         }
         return string;
@@ -546,5 +479,47 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         int hours = calendar.get(Calendar.HOUR_OF_DAY) * 60;
         int minutes = calendar.get(Calendar.MINUTE);
         currentHourAsInt = hours + minutes;
+    }
+
+    private int castStringToInt(String hours) {
+        return Integer.parseInt(hours);
+    }
+
+    private int castIntToAnotherInt(int i) {
+        int hours = i / 100;
+        int minutes = i % 100;
+        hours = hours * 60;
+        return (hours + minutes);
+    }
+
+    private String indexDayToDayWritten(int indexOfDay) {
+        String dayWritten;
+        switch (indexOfDay) {
+            case 0:
+                dayWritten = " (Sun)";
+                break;
+            case 1:
+                dayWritten = " (Mon)";
+                break;
+            case 2:
+                dayWritten = " (Tue)";
+                break;
+            case 3:
+                dayWritten = " (Wed)";
+                break;
+            case 4:
+                dayWritten = " (Thu)";
+                break;
+            case 5:
+                dayWritten = " (Fri)";
+                break;
+            case 6:
+                dayWritten = " (Sat)";
+                break;
+            default:
+                dayWritten = "noEntryFound";
+                break;
+        }
+        return dayWritten;
     }
 }
