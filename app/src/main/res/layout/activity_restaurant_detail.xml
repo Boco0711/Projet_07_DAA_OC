@@ -153,7 +153,7 @@
             android:id="@+id/detail_restaurant_like_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/restaurant_like"
+            android:src="@drawable/restaurant_not_liked"
             android:backgroundTint="@color/white"
             android:layout_marginTop="@dimen/restaurantDetails_Restaurant_Button_Margin_Top"
             android:layout_gravity="center"

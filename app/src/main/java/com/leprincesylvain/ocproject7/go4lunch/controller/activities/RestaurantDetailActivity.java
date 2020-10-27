@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,14 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
@@ -35,6 +39,7 @@ import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,6 +67,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private int imageNumber;
     private int[] images = {R.drawable.restaurant_unselected, R.drawable.restaurant_selected};
+
+    boolean userLikesIt;
 
     private WorkmatesAdapter workmatesAdapter;
 
@@ -215,7 +222,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (restaurant.getFormatted_phone_number() != null) {
             callRestaurant();
         }
-        giveThisRestaurantALike();
+        checkIfUserLikeThisRestaurant();
     }
 
     private void visitWebsite() {
@@ -233,19 +240,53 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestaurantCallBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
-                // sur le click du bouton déclencher ouverture de l'application appel avec précomposition du numéro du restaurant
+                if (restaurant.getFormatted_phone_number() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + restaurant.getFormatted_phone_number()));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No number available", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
+    private void checkIfUserLikeThisRestaurant() {
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                List<?> restaurantLikeByUser = (List<?>) document.get("likes");
+                String string;
+                if (restaurantLikeByUser != null)
+                    for (int i = 0; i < restaurantLikeByUser.size(); i++) {
+                        string = (String) restaurantLikeByUser.get(i);
+                        if (string.equals(restaurant.getId())) {
+                            userLikesIt = true;
+                            break;
+                        }
+                    }
+                giveThisRestaurantALike();
+            }
+        });
+    }
 
     public void giveThisRestaurantALike() {
+        if (userLikesIt) {
+            mRestaurantLike.setImageResource(R.drawable.restaurant_liked);
+        }
         mRestaurantLikeBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
-                // Ajouter un like (une fois par utilisateur) au restaurant dans firebase
+                if (userLikesIt) {
+                    userReference.update("likes", FieldValue.arrayRemove(restaurant.getId()));
+                    userLikesIt = false;
+                    mRestaurantLike.setImageResource(R.drawable.restaurant_not_liked);
+                } else {
+                    userReference.update("likes", FieldValue.arrayUnion(restaurant.getId()));
+                    userLikesIt = true;
+                    mRestaurantLike.setImageResource(R.drawable.restaurant_liked);
+                }
             }
         });
     }
@@ -260,5 +301,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         workmatesAdapter.stopListening();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: ");
+        finish();
     }
 }

@@ -34,10 +34,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".controller.activities.RestaurantDetailActivity">
+        <activity android:name=".controller.activities.RestaurantDetailActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
 
-        <activity android:name=".controller.activities.MainActivity">
+        <activity android:name=".controller.activities.MainActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <meta-data
