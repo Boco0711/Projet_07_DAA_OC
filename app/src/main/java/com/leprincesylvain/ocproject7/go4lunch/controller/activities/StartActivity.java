@@ -282,6 +282,7 @@ public class StartActivity extends AppCompatActivity {
             mainActivityIntent.putExtra("user_email", userEmail);
             mainActivityIntent.putExtra("user_id", userId);
             startActivity(mainActivityIntent);
+            this.finish();
         } else
             Log.d(TAG, "updateUi: User == null");
     }
