@@ -72,9 +72,14 @@ public class MyLunchFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            String choiceOfRestaurant = documentSnapshot.getString(KEY_RESTAURANTCHOICE);
-                            long dateOfChoice = documentSnapshot.getLong(KEY_DATEOFCHOICE);
-                            getRestaurantIfExist(choiceOfRestaurant, dateOfChoice);
+                            if (documentSnapshot.getString(KEY_RESTAURANTCHOICE) != null && documentSnapshot.getLong(KEY_DATEOFCHOICE) != null) {
+                                String choiceOfRestaurant = documentSnapshot.getString(KEY_RESTAURANTCHOICE);
+                                long dateOfChoice = documentSnapshot.getLong(KEY_DATEOFCHOICE);
+                                getRestaurantIfExist(choiceOfRestaurant, dateOfChoice);
+                            } else {
+                                restaurantName.setText(requireContext().getString(R.string.not_selected_restaurant_mylunch));
+                                restaurantDetailButton.setVisibility(View.GONE);
+                            }
                         }
                     }
                 });
