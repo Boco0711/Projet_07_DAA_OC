@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leprincesylvain.ocproject7.go4lunch.R;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 import com.squareup.picasso.Picasso;
@@ -23,9 +24,11 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
     private static final String TAG = "WorkmateAdapter_TAG";
     private String restaurantName;
     long dateOfToday = GetDate.getDate();
+    private RecyclerViewOnClickListener mListener;
 
-    public WorkmatesAdapter(@NonNull FirestoreRecyclerOptions<Workmate> options) {
+    public WorkmatesAdapter(@NonNull FirestoreRecyclerOptions<Workmate> options, RecyclerViewOnClickListener listener) {
         super(options);
+        this.mListener = listener;
         Log.d(TAG, "WorkmatesAdapter: empty" + options);
     }
 
@@ -45,7 +48,7 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
         String workmateName = workmate.getUserName();
         String workmateRestaurantChoice = workmate.getRestaurantChoice();
         int workmateDateOfChoice = workmate.getDateOfChoice();
-        String workmateRestaurantChoiceId = workmate.getRestaurantId();
+        final String workmateRestaurantChoiceId = workmate.getRestaurantId();
 
         String hasSelectedThisRestaurant = workmateName + context.getString(R.string.is_joining);
         String hasChooseARestaurant = workmateName + context.getString(R.string.hasChoose) + workmateRestaurantChoice;
@@ -59,12 +62,6 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
             } else {
                 Log.d(TAG, "onBindViewHolder: if else");
                 workmatesHolder.mWorkmateText.setText(hasChooseARestaurant);
-                workmatesHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
             }
             Typeface bold = Typeface.defaultFromStyle(Typeface.BOLD);
             workmatesHolder.mWorkmateText.setTypeface(bold);
@@ -79,18 +76,28 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
     public WorkmatesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.workmate, parent, false);
-        return new WorkmatesHolder(view);
+        return new WorkmatesHolder(view, mListener);
     }
 
-    static class WorkmatesHolder extends RecyclerView.ViewHolder {
+    static class WorkmatesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mWorkmateText;
         ImageView mWorkmatePicture;
+        RecyclerViewOnClickListener listener;
 
-        public WorkmatesHolder(@NonNull View itemView) {
+        public WorkmatesHolder(@NonNull View itemView, RecyclerViewOnClickListener listener) {
             super(itemView);
             Log.d(TAG, "WorkmatesHolder: ");
             mWorkmatePicture = itemView.findViewById(R.id.workmate_picture);
             mWorkmateText = itemView.findViewById(R.id.workmate_text);
+            this.listener = listener;
+
+            if (this.listener != null)
+                itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.recyclerviewClick(getAdapterPosition());
         }
     }
 }
