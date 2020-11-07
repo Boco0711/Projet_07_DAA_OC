@@ -1,12 +1,12 @@
 <resources>
     <!-- Start Activity Dimens -->
-    <dimen name="startActivity_logo_size">350dp</dimen>
-    <dimen name="startActivity_title_size">70sp</dimen>
+    <dimen name="startActivity_logo_size">325dp</dimen>
+    <dimen name="startActivity_title_size">80sp</dimen>
     <dimen name="startActivity_devise_size">12sp</dimen>
     <dimen name="startActivity_Button_height">60dp</dimen>
-    <dimen name="startActivity_Button_Margin_Start">30dp</dimen>
-    <dimen name="startActivity_Button_Margin_End">30dp</dimen>
-    <dimen name="startActivity_Button_Margin_Between_Button">30dp</dimen>
+    <dimen name="startActivity_Button_Margin_Start">10dp</dimen>
+    <dimen name="startActivity_Button_Margin_End">10dp</dimen>
+    <dimen name="startActivity_Button_Margin_Between_Button">10dp</dimen>
     <dimen name="startActivity_Button_Padding">10dp</dimen>
     <dimen name="startActivity_Image_Button_Width">60dp</dimen>
     <dimen name="startActivity_Button_Margin_Bottom">10dp</dimen>

@@ -2,7 +2,7 @@
 
 
     <!-- Start Activity Dimens -->
-    <dimen name="startActivity_logo_size">285dp</dimen>
+    <dimen name="startActivity_logo_size">225dp</dimen>
     <dimen name="startActivity_title_size">70sp</dimen>
     <dimen name="startActivity_devise_size">12sp</dimen>
     <dimen name="startActivity_Button_height">60dp</dimen>

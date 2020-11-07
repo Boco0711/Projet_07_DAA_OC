@@ -14,7 +14,7 @@
     <dimen name="startActivity_Button_Margin_Bottom">5dp</dimen>
 
     <!-- Restaurant Details Dimens -->
-    <dimen name="restaurantDetails_Restaurant_Picture_Height">280dp</dimen>
+    <dimen name="restaurantDetails_Restaurant_Picture_Height">200dp</dimen>
     <dimen name="restaurantDetails_Floating_Action_Button_Margin_End">10dp</dimen>
     <dimen name="restaurantDetails_Restaurant_Name_Size">16sp</dimen>
     <dimen name="restaurantDetails_Restaurant_Name_Margin_Top">8dp</dimen>
