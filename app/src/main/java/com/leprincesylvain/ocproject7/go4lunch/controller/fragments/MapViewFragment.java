@@ -1,6 +1,7 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.leprincesylvain.ocproject7.go4lunch.R;
+import com.leprincesylvain.ocproject7.go4lunch.controller.activities.RestaurantDetailActivity;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 
@@ -138,31 +141,40 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                                     googleMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(name)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(mContext, R.drawable.pinpointfinal_restaurant_selected))));
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green)));
                                 } else {
                                     googleMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(name)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(mContext, R.drawable.pinpointfinal_restaurant_not_selected))));
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange)));
                                 }
                             }
                         });
             }
         }
+        listenOnMarkerClick();
     }
 
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            assert drawable != null;
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
+    public void listenOnMarkerClick() {
+        if (googleMap != null) {
+            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(mContext, RestaurantDetailActivity.class);
+                    for (Restaurant restaurant : restaurantList) {
+                        if (marker.getTitle().equalsIgnoreCase(restaurant.getName())) {
+                            intent.putExtra("restaurant", restaurant);
+                        }
+                    }
+                    mContext.startActivity(intent);
+                }
+            });
         }
+    }
 
-        Bitmap bitmap = Bitmap.createBitmap(120,120, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        assert drawable != null;
-        drawable.setBounds(0, 0, 120, 120);
-        drawable.draw(canvas);
-        return bitmap;
+
+    public void clearMapFromMarker() {
+        if (googleMap != null)
+            googleMap.clear();
     }
 }
