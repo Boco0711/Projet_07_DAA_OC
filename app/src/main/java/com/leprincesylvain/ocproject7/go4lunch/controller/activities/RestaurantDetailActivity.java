@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +81,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         makeBinding();
 
         if (getIntent().getExtras() != null) {
+            Log.d(TAG, "onCreate: ");
             restaurant = getIntent().getExtras().getParcelable("restaurant");
         }
 
@@ -115,7 +118,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void setRestaurantPhoto() {
         Log.d(TAG, "setRestaurantPhoto: ");
         String googleApiKey = getApplicationContext().getString(R.string.google_api_key);
-        if (restaurant.getPhotos() != null && restaurant.getPhotos().get(0).getPhoto_reference().length() > 0) {
+        if (restaurant.getPhotos() != null && restaurant.getPhotos().size() > 0) {
             Log.d(TAG, "setRestaurantPhoto: 1");
             String reference = restaurant.getPhotos().get(0).getPhoto_reference();
             String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + reference + "&key=" + googleApiKey;
@@ -211,6 +214,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         restaurantRecyclerView.setHasFixedSize(false);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        restaurantRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         restaurantRecyclerView.setAdapter(workmatesAdapter);
     }
 
