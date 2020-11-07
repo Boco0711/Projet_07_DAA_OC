@@ -1,5 +1,6 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.adapters.WorkmatesAdapter;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
+import com.leprincesylvain.ocproject7.go4lunch.controller.activities.RestaurantDetailActivity;
+import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 
-public class WorkmatesFragment extends Fragment {
+import java.util.List;
+
+public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickListener {
     private static final String TAG = "WorkmatesFragment_TAG";
 
     private FirebaseFirestore firebaseFirestoreInstance = FirebaseFirestore.getInstance();
@@ -28,10 +34,15 @@ public class WorkmatesFragment extends Fragment {
 
     private WorkmatesAdapter workmateAdapter;
 
+    private List<Restaurant> restaurantList;
+    private List<Workmate> workmateList;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            restaurantList = getArguments().getParcelableArrayList("restaurantList");
+        }
     }
 
     @Nullable
@@ -53,7 +64,8 @@ public class WorkmatesFragment extends Fragment {
                 .setQuery(query, Workmate.class)
                 .build();
 
-        workmateAdapter = new WorkmatesAdapter(options);
+        workmateList = options.getSnapshots();
+        workmateAdapter = new WorkmatesAdapter(options, this);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_workmates);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(workmateAdapter);
@@ -71,5 +83,24 @@ public class WorkmatesFragment extends Fragment {
         super.onStop();
         Log.d(TAG, "onStop: ");
         workmateAdapter.stopListening();
+    }
+
+    @Override
+    public void recyclerviewClick(int position) {
+        String restaurantId = null;
+        if (workmateList != null) {
+            Workmate workmate = workmateList.get(position);
+            restaurantId = workmate.getRestaurantId();
+        }
+        if (restaurantId != null) {
+            for (Restaurant restaurant : restaurantList) {
+                if (restaurant.getId().equalsIgnoreCase(restaurantId)) {
+                    Intent intent = new Intent(getContext(), RestaurantDetailActivity.class);
+                    intent.putExtra("restaurant", restaurant);
+                    getContext().startActivity(intent);
+                    break;
+                }
+            }
+        }
     }
 }
