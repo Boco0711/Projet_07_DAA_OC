@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantRecyclerViewAdapter.ViewHolder> {
     private final static String TAG = "RecyclerViewAdapter_Tag";
@@ -70,6 +71,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: ");
         setSomeValue();
         final Restaurant restaurant = restaurantList.get(position);
 
@@ -79,7 +81,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
 
         holder.mRestaurantName.setText(restaurant.getName());
         int iend = restaurant.getFormatted_address().indexOf(',');
-        String adresse = restaurant.getFormatted_address().substring(0, iend);
+        String adresse = restaurant.getFormatted_address().substring(0, iend) + "rue du faubourg saint honorée de la libertée des etat unis d'amérique";
 
         holder.mRestaurantAdresse.setText(adresse);
         holder.mRestaurantDistance.setText(distance);
@@ -179,72 +181,6 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         holder.mRestaurantHours.setText(heure);
     }
 
-    /*
-    private String getCorrectSentence(Restaurant restaurant) {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        Log.d(TAG, "getCorrectSentence: " + day);
-        String hour;
-        if (restaurant.getOpeningHours() != null) {
-            for (Period period : restaurant.getOpeningHours().getPeriod()) {
-                if (day == period.getOpen().getDay()) {
-                    hour = getRestaurantStatus(period, calendar);
-                    return hour;
-                }
-            }
-        } else {
-            Log.d(TAG, "onBindViewHolder: OpenHours = null");
-            hour = context.getResources().getString(R.string.schedule_unavailable);
-            return hour;
-        }
-        return "heure";
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private String getRestaurantStatus(Period period, Calendar calendar) {
-        Log.d(TAG, "getRestaurantStatus: ");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HHmm");
-        int currentTime = Integer.parseInt(simpleDateFormat.format(calendar.getTime()));
-        int openHour = Integer.parseInt(period.getOpen().getTime());
-        int closeHour = Integer.parseInt(period.getClose().getTime());
-        String closingTime = period.getClose().getTime().substring(0, 2) + ":" + period.getClose().getTime().substring(2);
-        String openingTime = period.getOpen().getTime().substring(0, 2) + ":" + period.getOpen().getTime().substring(2);
-        String openingOrClosingHour;
-        String openingOrClosingHourToReturn;
-        if ((currentTime > openHour && currentTime < closeHour) || (currentTime > openHour && openHour > closeHour)) {
-            openingOrClosingHour = getCorrectOpeningOrClosingHour(closingTime);
-            openingOrClosingHourToReturn = context.getResources().getString(R.string.open_until) + openingOrClosingHour.trim().toLowerCase().replace(" ", "");
-        } else {
-            openingOrClosingHour = getCorrectOpeningOrClosingHour(openingTime);
-            openingOrClosingHourToReturn = context.getResources().getString(R.string.closed_until) + openingOrClosingHour.trim().toLowerCase().replace(" ", "");
-        }
-        return openingOrClosingHourToReturn;
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private String getCorrectOpeningOrClosingHour(String hour) {
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
-        DateFormat outPut = new SimpleDateFormat("hh:mm aa");
-        Date date = null;
-        String correctOpeningOrClosingHour;
-        try {
-            date = dateFormat.parse(hour);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (date != null)
-            correctOpeningOrClosingHour = outPut.format(date);
-        else
-            return "Error while getting hours";
-        if (correctOpeningOrClosingHour.substring(3, 5).equals("00")) {
-            correctOpeningOrClosingHour = correctOpeningOrClosingHour.substring(0, 2) + correctOpeningOrClosingHour.substring(5);
-        }
-        correctOpeningOrClosingHour = correctOpeningOrClosingHour.replaceFirst("^0+(?!$)", "");
-        return correctOpeningOrClosingHour;
-    }
-    */
-
-
     private void displayCorrectRatingForRestaurant(ViewHolder holder, Double note) {
         if (note != null) {
             note = (note * 3) / 5;
@@ -293,16 +229,15 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 });
     }
 
-    // Ici ça merde parce que lorsqu'on change de jour, on recupère directement les données du jour suivant et si des horaire sont après minuit pour le
-
-
     private String getNumberOfServiceToday(Restaurant restaurant) {
         int numberOfService = 0;
         String returned;
         List<Period> periodList = new ArrayList<>();
 
-        if (restaurant.getOpeningHours() == null)
+        if (restaurant.getOpeningHours() == null) {
+            Log.d(TAG, "getNumberOfServiceToday: ");
             return context.getResources().getString(R.string.schedule_unavailable);
+        }
 
         Period[] periods = restaurant.getOpeningHours().getPeriod();
 
@@ -462,7 +397,10 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             SimpleDateFormat _12H = new SimpleDateFormat("hh:mm aa");
             Date _24HDate = _24H.parse(hour);
             assert _24HDate != null;
-            correctOpeningOrClosingHour = _12H.format(_24HDate);
+            if (Locale.getDefault().getDisplayLanguage() == "en")
+                correctOpeningOrClosingHour = _12H.format(_24HDate);
+            else
+                correctOpeningOrClosingHour = _24H.format(_24HDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -470,6 +408,8 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             correctOpeningOrClosingHour = correctOpeningOrClosingHour.substring(0, 2) + correctOpeningOrClosingHour.substring(5);
         }
         correctOpeningOrClosingHour = correctOpeningOrClosingHour.replaceFirst("^0+(?!$)", "");
+        if (!Locale.getDefault().getDisplayLanguage().equalsIgnoreCase("en"))
+            correctOpeningOrClosingHour = correctOpeningOrClosingHour + "H";
         return correctOpeningOrClosingHour;
     }
 
@@ -496,30 +436,46 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         String dayWritten;
         switch (indexOfDay) {
             case 0:
-                dayWritten = " (Sun)";
+                dayWritten = context.getString(R.string.sunday);
                 break;
             case 1:
-                dayWritten = " (Mon)";
+                dayWritten = context.getString(R.string.monday);
                 break;
             case 2:
-                dayWritten = " (Tue)";
+                dayWritten = context.getString(R.string.tuesday);
                 break;
             case 3:
-                dayWritten = " (Wed)";
+                dayWritten = context.getString(R.string.wednesday);
                 break;
             case 4:
-                dayWritten = " (Thu)";
+                dayWritten = context.getString(R.string.thursday);
                 break;
             case 5:
-                dayWritten = " (Fri)";
+                dayWritten = context.getString(R.string.friday);
                 break;
             case 6:
-                dayWritten = " (Sat)";
+                dayWritten = context.getString(R.string.saturday);
                 break;
             default:
                 dayWritten = "noEntryFound";
                 break;
         }
         return dayWritten;
+    }
+
+    public void updateTimes() {
+        Log.d(TAG, "updateTimes: ");
+        for (int i = 0; i < restaurantList.size(); i++) {
+            final Restaurant note = restaurantList.get(i);
+
+
+            Calendar calendar = Calendar.getInstance();
+            int hours = calendar.get(Calendar.HOUR_OF_DAY) * 60;
+            int minutes = calendar.get(Calendar.MINUTE);
+            int time = hours + minutes;
+            if (currentHourAsInt != time) {
+                notifyItemChanged(i);
+            }
+        }
     }
 }
