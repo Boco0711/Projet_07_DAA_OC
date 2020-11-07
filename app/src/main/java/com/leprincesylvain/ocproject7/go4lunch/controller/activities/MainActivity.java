@@ -1,15 +1,20 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.activities;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,33 +24,56 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.maps.android.SphericalUtil;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.NotifyWorker;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MyLunchFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.RestaurantListViewFragment;
+import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.SettingsFragment;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.WorkmatesFragment;
+import com.leprincesylvain.ocproject7.go4lunch.model.Prediction;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.squareup.picasso.Picasso;
@@ -56,10 +84,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,11 +109,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView bottomNavigationView;
 
     // Fragment iD
-    public static final int MAPVIEW_FRAGMENT = R.id.bottom_nav_mapview;
-    public static final int RESTAURANT_LISTVIEW_FRAGMENT = R.id.bottom_nav_listview;
-    public static final int COWORKER_LISTVIEW_FRAGMENT = R.id.bottom_nav_workmates;
+    private static final int MAPVIEW_FRAGMENT = R.id.bottom_nav_mapview;
+    private static final int RESTAURANT_LISTVIEW_FRAGMENT = R.id.bottom_nav_listview;
+    private static final int COWORKER_LISTVIEW_FRAGMENT = R.id.bottom_nav_workmates;
     private static final int MY_LUNCH_FRAGMENT = R.id.drawer_nav_mylunch;
     private static final int SETTINGS_FRAGMENT = R.id.drawer_nav_settings;
+    private int fragmentSelected;
+    AutocompleteSupportFragment autocompleteSupportFragment;
 
     // Fragment Declaration
     private MapViewFragment mapViewFragment = (MapViewFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
@@ -101,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String KEY_USERNAME = "userName";
     private static final String KEY_USERMAIL = "userMail";
     private static final String KEY_USERPICTURE = "userProfilePicture";
-    private String userId;
+    private static final String KEY_DATEOFCHOICE = "dateOfChoice";
+    public static String userId;
     private String username;
     private String userPicture;
     private String usermail;
@@ -110,20 +144,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Users");
+    private DocumentReference documentReference;
 
     private int numberOfRestaurantFromPlaceCall = 0;
     private String googleApiKey;
     private int numberOfCallToDetail = 0;
 
+    private List<String> placesId = new ArrayList<>();
+    private ArrayList<Restaurant> restaurantsToUse = new ArrayList<>();
+    List<Prediction> predictionList = new ArrayList<>();
+    ArrayList<Restaurant> restaurantListMatchingPrediction = new ArrayList<>();
+    private int autocompleteCallDetail = 0;
+
+    PlacesClient placesClient;
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         googleApiKey = getResources().getString(R.string.google_api_key);
+        if (savedInstanceState != null)
+            fragmentSelected = savedInstanceState.getInt("FragmentSelected");
+        callShowProperFragment(fragmentSelected);
+        setContentView(R.layout.activity_main);
         getUserDetails();
         if (userId != null) {
             createUserInFirestoreIfNotExisting();
+            documentReference = collectionReference.document(userId);
         }
         configureToolbar();
         configureDrawerLayout();
@@ -131,12 +181,157 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureBottomNavigationView();
         setRetrofitForLaterCall();
         getLocationPermission();
+        if (autocompleteCallDetail == 0) {
+            restaurantsToUse = restaurantList;
+        }
+        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_api_key));
+        placesClient = Places.createClient(this);
+        creatOneTimeWorkRequest();
+    }
+
+    public void creatOneTimeWorkRequest() {
+        Log.d(TAG, "creatOneTimeWorkRequest: ");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        Data inputData = new Data.Builder()
+                .putString("userId", userId)
+                .build();
+
+        Calendar calendar = Calendar.getInstance();
+        long nowInMillis = (calendar.HOUR_OF_DAY * 60) + calendar.MINUTE;
+
+        int now = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+        long wantedTime = 720;
+
+        long initDelai = wantedTime - now;
+        Log.d(TAG, "creatOneTimeWorkRequest: init delai" + initDelai);
+        if (initDelai < 0)
+            initDelai = (initDelai + 1440) * 60;
+
+        Log.d(TAG, "creatOneTimeWorkRequest: " + initDelai);
+
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(NotifyWorker.class)
+                .setInputData(inputData)
+                .setInitialDelay(initDelai, TimeUnit.SECONDS)
+                .build();
+
+        WorkManager.getInstance().enqueue(request);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu: ");
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_search_icon);
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionExpand: ");
+                androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
+
+                searchView.setBackgroundColor(getResources().getColor(R.color.white));
+                searchView.setQueryHint("Search Restaurant");
+
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        Log.d(TAG, "onQueryTextChange: ");
+                        predictionList.clear();
+                        restaurantListMatchingPrediction.clear();
+                        if (newText.length() == 0) {
+                            autocompleteCallDetail = 0;
+                            autoCompleteWidget(newText);
+                        }
+                        if (newText.length() > 2) {
+                            autoCompleteWidget(newText);
+                        }
+                        return true;
+                    }
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                restaurantsToUse = restaurantList;
+                autocompleteCallDetail = 0;
+                if (getFragmentSelected == RESTAURANT_LISTVIEW_FRAGMENT) {
+                    restaurantListViewFragment.onDestroy();
+                    showRestaurantListViewFragment();
+                }
+                return true;
+            }
+        });
+        return true;
+    }
+
+
+    public void autoCompleteWidget(String string) {
+        Log.d(TAG, "autoCompleteWidget: " + string);
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                toBounds(latLng, 2000).southwest,
+                toBounds(latLng, 2000).northeast);
+
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setLocationRestriction(bounds)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setSessionToken(token)
+                .setQuery(string)
+                .build();
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener(new OnSuccessListener<FindAutocompletePredictionsResponse>() {
+            @Override
+            public void onSuccess(FindAutocompletePredictionsResponse findAutocompletePredictionsResponse) {
+                for (AutocompletePrediction prediction : findAutocompletePredictionsResponse.getAutocompletePredictions()) {
+                    for (Place.Type type : prediction.getPlaceTypes()) {
+                        if (type.toString().equalsIgnoreCase("restaurant")) {
+                            Prediction itemPrediction = new Prediction(prediction.getPlaceId(), prediction.getPrimaryText(null).toString());
+                            predictionList.add(itemPrediction);
+                        }
+                    }
+                }
+                restaurantListMatchingPrediction.clear();
+                if (predictionList.size() > 0) {
+                    for (Prediction prediction : predictionList) {
+                        Log.d(TAG, "onSuccess: " + prediction.getName() + " " + prediction.getPlaceId());
+                        autocompleteCallDetail++;
+                        getDetail(prediction.getPlaceId());
+                    }
+                } else {
+                    if (mapViewFragment != null) {
+                        restaurantsToUse = restaurantList;
+                        mapViewFragment.clearMapFromMarker();
+                        mapViewFragment.putMarkerOnMap(restaurantsToUse);
+                    }
+                }
+            }
+        });
+    }
+
+    public LatLngBounds toBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     private void getUserDetails() {
-        Log.d(TAG, "getUserDetails: ");
         if (getIntent().getExtras() != null) {
-            Log.d(TAG, "getUserDetails: getExtras() != null");
             username = getIntent().getExtras().getString("user_name");
             userPicture = getIntent().getExtras().getString("user_photo");
             usermail = getIntent().getExtras().getString("user_email");
@@ -147,19 +342,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void createUserInFirestoreIfNotExisting() {
-        Log.d(TAG, "createUserInFirestoreIfNotExisting: ");
         user.put(KEY_USERNAME, username);
         user.put(KEY_USERMAIL, usermail);
         user.put(KEY_USERPICTURE, userPicture);
+        user.put(KEY_DATEOFCHOICE, 0);
         collectionReference.document(userId).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: ");
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if (documentSnapshot != null && !documentSnapshot.exists()) {
-                                Log.d(TAG, "onComplete: documentSnapshot!exist");
                                 collectionReference.document(userId).set(user);
                             }
                         }
@@ -237,10 +430,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onNavigationItemSelected: ");
         int itemId = item.getItemId();
         if (itemId == R.id.drawer_nav_logout) {
-            Log.d(TAG, "onNavigationItemSelected: click on logout");
             logOutTheCurrentUser();
         } else {
             callShowProperFragment(itemId);
@@ -252,9 +443,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void logOutTheCurrentUser() {
-        Log.d(TAG, "logOutTheCurrentUser: ");
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Log.d(TAG, "logOutTheCurrentUser: signOut currentUser and start the LoginActivity");
             FirebaseAuth.getInstance().signOut();
             GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut();
             Intent intent = new Intent(this, StartActivity.class);
@@ -262,27 +451,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private int getFragmentSelected;
+
     private void callShowProperFragment(int fragmentIdentifier) {
+        Log.d(TAG, "callShowProperFragment: " + fragmentIdentifier);
+        fragmentSelected = fragmentIdentifier;
         switch (fragmentIdentifier) {
             case MAPVIEW_FRAGMENT:
-                Log.d(TAG, "showFragment: MapView");
                 this.showMapViewFragment();
+                setTitle("I'm Hungry!");
+                getFragmentSelected = MAPVIEW_FRAGMENT;
                 break;
             case RESTAURANT_LISTVIEW_FRAGMENT:
-                Log.d(TAG, "showFragment: RestaurantListView");
                 this.showRestaurantListViewFragment();
+                setTitle("I'm Hungry!");
+                getFragmentSelected = RESTAURANT_LISTVIEW_FRAGMENT;
                 break;
             case COWORKER_LISTVIEW_FRAGMENT:
-                Log.d(TAG, "showFragment: CoworkerListView");
                 this.showCoworkerListViewFragment();
+                setTitle("Available workmates");
                 break;
             case MY_LUNCH_FRAGMENT:
-                Log.d(TAG, "showFragment: MyLunch");
                 this.showMyLunchFragment();
+                setTitle("My lunch");
                 break;
             case SETTINGS_FRAGMENT:
-                Log.d(TAG, "showFragment: Settings");
                 this.showSettingsFragment();
+                setTitle("Settings");
                 break;
             default:
                 break;
@@ -290,39 +485,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showMapViewFragment() {
-        Log.d(TAG, "showMapViewFragment: creating a new MapViewFragment");
         this.mapViewFragment = new MapViewFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("latlng", latLng);
-        bundle.putParcelableArrayList("list", restaurantList);
+        bundle.putParcelableArrayList("list", restaurantsToUse);
         this.mapViewFragment.setArguments(bundle);
         this.startTransactionFragment(this.mapViewFragment);
     }
 
     private void showRestaurantListViewFragment() {
-        Log.d(TAG, "showRestaurantListViewFragment: ");
-        if (this.restaurantListViewFragment == null) {
-            restaurantListViewFragment = new RestaurantListViewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("list", restaurantList);
-            bundle.putParcelable("position", latLng);
-            restaurantListViewFragment.setArguments(bundle);
-        }
+        Log.d(TAG, "showRestaurantListViewFragment: " + restaurantsToUse.size());
+        restaurantListViewFragment = new RestaurantListViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("list", restaurantsToUse);
+        bundle.putParcelable("position", latLng);
+        restaurantListViewFragment.setArguments(bundle);
         this.startTransactionFragment(this.restaurantListViewFragment);
     }
 
     private void showCoworkerListViewFragment() {
-        Log.d(TAG, "showCoworkerListViewFragment: ");
         if (this.workmatesFragment == null) {
             workmatesFragment = new WorkmatesFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("restaurantList", restaurantsToUse);
+            workmatesFragment.setArguments(bundle);
         }
         this.startTransactionFragment(this.workmatesFragment);
     }
 
     private void showMyLunchFragment() {
-        Log.d(TAG, "showMyLunchFragment: ");
         if (this.myLunchFragment == null) {
-            Log.d(TAG, "showMyLunchFragment: null");
             myLunchFragment = new MyLunchFragment();
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("list", restaurantList);
@@ -332,18 +524,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showSettingsFragment() {
-        Log.d(TAG, "showSettingsFragment: ");
+        settingsFragment = new SettingsFragment();
+        startTransactionFragment(settingsFragment);
     }
 
     private void startTransactionFragment(Fragment fragment) {
-        Log.d(TAG, "startTransactionFragment: ");
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
         }
     }
 
     private void setRetrofitForLaterCall() {
-        Log.d(TAG, "setRetrofitForLaterCall: ");
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -358,27 +549,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getLocationPermission() {
-        Log.d(TAG, "getLocationPermission: ");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "getLocationPermission: set permission on true");
             mLocationPermissionGranted = true;
             getDeviceLocation();
         } else {
-            Log.d(TAG, "getLocationPermission: open authorization page");
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionResult: ");
+
         if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "onRequestPermissionResult: permission granted");
                 mLocationPermissionGranted = true;
                 getDeviceLocation();
             } else {
-                Log.d(TAG, "onRequestPermissionResult: permission denied");
                 mLocationPermissionGranted = false;
                 Toast.makeText(this, "If you want to use our app you need to allow device location", Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable() {
@@ -392,7 +578,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation: ");
         try {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             if (locationManager != null) {
@@ -405,34 +590,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: new latitude: " + location.getLatitude() + " longitude: " + location.getLongitude());
         updateLocationOnMapsFragment(location);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.d(TAG, "onProviderEnabled: ");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Log.d(TAG, "onProviderDisabled: ");
     }
 
     // Never Called
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(TAG, "onStatusChanged: ");
     }
 
     private void updateLocationOnMapsFragment(Location location) {
-        Log.d(TAG, "updateLocation: ");
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (this.mapViewFragment == null) {
-            Log.d(TAG, "updateLocation: mapViewFragment == null");
             showMapViewFragment();
         } else {
-            Log.d(TAG, "updateLocation: mapViewFragment != null");
             this.mapViewFragment.moveCameraIn(latLng, 16);
         }
         getListOfRestaurants(latLng);
@@ -454,12 +632,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             for (int j = 0; j < response.body().getResults().size(); j++) {
                                 Log.d(TAG, "onResponse: " + j);
                                 numberOfRestaurantFromPlaceCall++;
-                                String place_id = response.body().getResults().get(j).getPlaceId();
-                                getDetail(place_id);
+                                String placeId = response.body().getResults().get(j).getPlaceId();
+                                placesId.add(placeId);
                             }
                         }
                     }
+                    getLikedRestaurantIfNotInNearby();
                 }
+
                 @Override
                 public void onFailure(@NonNull Call<ResponseToPlace> call, @NonNull Throwable t) {
                     Log.d(TAG, "getListOfRest onFailure: " + t.getMessage());
@@ -468,15 +648,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IllegalStateException | JsonSyntaxException exception) {
             Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
         }
-         */
+*/
         getJson();
     }
 
     public void getDetail(final String placeId) {
-        Log.d(TAG, "getDetail: ");
+
         String detailPreUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=";
         String detailPostUrl = "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=";
         String url = detailPreUrl + placeId + detailPostUrl + googleApiKey;
+        Log.d(TAG, "getDetail: " + url);
         Call<ResponseToDetail> call = mapsCallApi.getRestaurantDetails(url);
         call.enqueue(new Callback<ResponseToDetail>() {
             @Override
@@ -484,14 +665,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful() && response.body() != null) {
                     numberOfCallToDetail++;
                     Restaurant restaurant = response.body().getRestaurant();
-                    restaurant.setId(placeId);
-                    restaurantList.add(restaurant);
-                    if (mapViewFragment != null && numberOfCallToDetail == numberOfRestaurantFromPlaceCall) {
-                        mapViewFragment.setRestaurantList(restaurantList);
-                        mapViewFragment.putMarkerOnMap(restaurantList);
+                    if (restaurant != null) {
+                        Log.d(TAG, "onResponse: getrestaurant detail " + restaurant.getName());
+                        restaurant.setId(placeId);
+                        if (mapViewFragment != null) {
+                            if (autocompleteCallDetail > 0) {
+                                Log.d(TAG, "onResponse: autoCompleteCallDetail " + restaurant.getName());
+                                restaurantListMatchingPrediction.add(restaurant);
+                                restaurantsToUse = restaurantListMatchingPrediction;
+                                mapViewFragment.clearMapFromMarker();
+                                mapViewFragment.putMarkerOnMap(restaurantListMatchingPrediction);
+                                if (getFragmentSelected == RESTAURANT_LISTVIEW_FRAGMENT) {
+                                    Log.d(TAG, "onResponse: size of toUse " + restaurantsToUse.size());
+                                    showRestaurantListViewFragment();
+                                } else if (getFragmentSelected == MAPVIEW_FRAGMENT) {
+                                    Log.d(TAG, "onResponse: size of toUse " + restaurantsToUse.size());
+                                    showMapViewFragment();
+                                }
+                            } else {
+                                restaurantList.add(restaurant);
+                                restaurantsToUse = restaurantList;
+                                mapViewFragment.setRestaurantList(restaurantList);
+                                mapViewFragment.putMarkerOnMap(restaurantList);
+                            }
+                        }
+                        if (numberOfCallToDetail >= placesId.size()) {
+                            LatLng latLng = new LatLng(Double.parseDouble(restaurant.getGeometry().getLocation().getLat()), Double.parseDouble(restaurant.getGeometry().getLocation().getLng()));
+                            mapViewFragment.moveCameraIn(latLng, 16);
+                        }
                     }
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<ResponseToDetail> call, @NonNull Throwable t) {
             }
@@ -499,7 +704,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getJson() {
-        Log.d(TAG, "getJson: ");
         String json;
         try {
             InputStream inputStream = getAssets().open("placenearbysearch.json");
@@ -508,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             inputStream.read(buffer);
             inputStream.close();
 
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
             JSONArray jsonArray = new JSONArray(json);
 
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -526,9 +730,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String id = ressourcesId.get(j);
                 Restaurant restaurant = new Gson().fromJson(myJson, Restaurant.class);
                 restaurant.setId(id);
-                restaurantList.add(restaurant);
+                String placeId = restaurant.getId();
+                placesId.add(placeId);
                 j++;
             }
+            getLikedRestaurantIfNotInNearby();
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -536,7 +742,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private String getDetailOfJsonObject(InputStream inputStream) {
-        Log.d(TAG, "getDetailOfJsonObject: ");
         try {
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, bytes.length);
@@ -544,5 +749,91 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void getAllRestaurantDetails() {
+        for (String string : placesId) {
+            getDetail(string);
+        }
+    }
+
+    private void getLikedRestaurantIfNotInNearby() {
+        documentReference.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            List<String> stringList = (List<String>) documentSnapshot.get("likes");
+                            if (stringList != null)
+                                for (String string : stringList) {
+                                    boolean isInTheList = false;
+                                    for (String idString : placesId) {
+                                        if (string.equalsIgnoreCase(idString)) {
+                                            isInTheList = true;
+                                        }
+                                    }
+                                    if (!isInTheList) {
+                                        placesId.add(string);
+                                    }
+                                }
+                        }
+                        getAllWorkmateRestaurant();
+                    }
+                });
+
+    }
+
+    private void getAllWorkmateRestaurant() {
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        String restoId = documentSnapshot.getString("restaurantId");
+                        boolean isInTheList = false;
+                        if (restoId != null && restoId.length() > 0) {
+                            for (String string : placesId) {
+                                if (string.equalsIgnoreCase(restoId))
+                                    isInTheList = true;
+                            }
+                            if (!isInTheList) {
+                                placesId.add(restoId);
+                            }
+                        }
+                    }
+                    getAllRestaurantDetails();
+                }
+            }
+        });
     }
 }
