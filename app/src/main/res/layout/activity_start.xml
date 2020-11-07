@@ -102,11 +102,9 @@
             android:layout_width="@dimen/startActivity_Image_Button_Width"
             android:layout_height="match_parent"
             android:contentDescription="@string/the_facebook_logo"
-            android:elevation="10dp"
             android:src="@drawable/logo_facebook"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -134,11 +132,9 @@
             android:layout_width="@dimen/startActivity_Image_Button_Width"
             android:layout_height="match_parent"
             android:contentDescription="@string/the_google_logo"
-            android:elevation="10dp"
             android:src="@mipmap/google_logo_foreground"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

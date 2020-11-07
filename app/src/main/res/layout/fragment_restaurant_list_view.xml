@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.fragments.RestaurantListViewFragment">
+    tools:context=".controller.fragments.RestaurantListViewFragment"
+    android:id="@+id/fragment_listview">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        tools:listitem="@layout/restaurant"
         />
 
 </FrameLayout>

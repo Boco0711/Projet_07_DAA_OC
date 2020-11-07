@@ -15,13 +15,15 @@
 
     <TextView
         android:id="@+id/workmate_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="italic"
         android:layout_marginStart="@dimen/workmate_Workmate_Text_Margin_Start"
         app:layout_constraintLeft_toRightOf="@+id/workmate_picture"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/workmate_picture"
         app:layout_constraintBottom_toBottomOf="@id/workmate_picture"
+        android:maxLines="3"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

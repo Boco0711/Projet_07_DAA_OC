@@ -7,7 +7,7 @@
     tools:context=".controller.fragments.SettingsFragment">
 
     <TextView
-        android:id="@+id/text_selected_language"
+        android:id="@+id/text_notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/startActivity_Button_Margin_Bottom"
@@ -20,17 +20,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text_change_language"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/notif_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/settingsFragment_Button_Margin"
-        android:layout_marginTop="@dimen/settingsFragment_Button_Margin"
-        android:layout_marginEnd="@dimen/settingsFragment_Button_Margin"
-        android:textAlignment="center"
-        android:textSize="@dimen/settingsFragment_Change_Language_Size"
-        android:text="@string/change_language"
-        app:layout_constraintTop_toBottomOf="@id/text_selected_language"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_notification"
+        app:layout_constraintLeft_toLeftOf="@+id/text_notification"
+        app:layout_constraintRight_toRightOf="@+id/text_notification"
+        android:layout_marginTop="@dimen/startActivity_Button_Margin_Bottom"
         />
+
+    <Button
+        android:id="@+id/open_app_settings_notif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/notif_button"
+        app:layout_constraintLeft_toLeftOf="@+id/notif_button"
+        app:layout_constraintRight_toRightOf="@+id/notif_button"
+        android:layout_marginTop="@dimen/startActivity_Button_Margin_Bottom"
+        android:text="@string/open_notification_panel_of_the_app"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

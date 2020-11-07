@@ -23,26 +23,29 @@
 
     <TextView
         android:id="@+id/restaurant_info"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/restaurant_Restaurant_Info_Size"
         android:textColor="@color/dark_grey"
         android:textAlignment="textStart"
         app:layout_constraintTop_toBottomOf="@id/restaurant_name"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/restaurant_box_coworker"
         android:layout_marginTop="@dimen/restaurant_Restaurant_Info_Margin_Top"
         android:layout_marginStart="@dimen/restaurant_Restaurant_Info_Margin_Start"
         />
 
     <TextView
         android:id="@+id/restaurant_open_hours"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/restaurant_Restaurant_Open_Hours_Size"
         android:textStyle="italic"
         android:textColor="@color/dark_grey"
         app:layout_constraintTop_toBottomOf="@id/restaurant_info"
         app:layout_constraintLeft_toLeftOf="@id/restaurant_info"
+        app:layout_constraintRight_toLeftOf="@+id/restaurant_stars_3"
+        android:ellipsize="marquee"
         android:layout_marginTop="@dimen/restaurant_Restaurant_Open_Hours_Margin_Top"
         />
 
@@ -87,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/restaurant_number_of_coworker"
             android:contentDescription="@string/coworker_picture"
-            android:src="@drawable/restaurant_coworker"
+            app:srcCompat="@drawable/restaurant_coworker"
             android:visibility="invisible"
             />
 
@@ -111,7 +114,7 @@
         app:layout_constraintTop_toTopOf="@id/restaurant_open_hours"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_open_hours"
         app:layout_constraintRight_toLeftOf="@id/restaurant_image"
-        android:src="@drawable/restaurant_star"
+        app:srcCompat="@drawable/restaurant_star"
         android:visibility="gone"
         android:contentDescription="@string/star"
         />
@@ -123,7 +126,7 @@
         app:layout_constraintTop_toTopOf="@id/restaurant_open_hours"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_open_hours"
         app:layout_constraintRight_toLeftOf="@id/restaurant_stars_1"
-        android:src="@drawable/restaurant_star"
+        app:srcCompat="@drawable/restaurant_star"
         android:visibility="gone"
         android:contentDescription="@string/star"
         />
@@ -135,7 +138,7 @@
         app:layout_constraintTop_toTopOf="@id/restaurant_open_hours"
         app:layout_constraintBottom_toBottomOf="@id/restaurant_open_hours"
         app:layout_constraintRight_toLeftOf="@id/restaurant_stars_2"
-        android:src="@drawable/restaurant_star"
+        app:srcCompat="@drawable/restaurant_star"
         android:visibility="gone"
         android:contentDescription="@string/star"
         />

@@ -15,23 +15,11 @@
         android:contentDescription="@string/restaurant_picture"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/detail_restaurant_select"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/restaurantDetails_Floating_Action_Button_Margin_End"
-        android:backgroundTint="#FFFFFF"
-        android:elevation="2dp"
-        app:borderWidth="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/detail_restaurant_picture"
-        app:layout_constraintRight_toRightOf="@id/detail_restaurant_picture"
-        app:layout_constraintTop_toBottomOf="@id/detail_restaurant_picture"
-        tools:ignore="UnusedAttribute" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detail_restaurant_detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/navHeader_Profil_Image_Side_Size"
         app:layout_constraintTop_toBottomOf="@id/detail_restaurant_picture"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -119,7 +107,7 @@
                 android:id="@+id/detail_restaurant_call_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/restaurant_phone"
+                app:srcCompat="@drawable/restaurant_phone"
                 android:backgroundTint="@color/white"
                 android:layout_marginTop="@dimen/restaurantDetails_Restaurant_Button_Margin_Top"
                 android:layout_gravity="center"
@@ -153,7 +141,7 @@
             android:id="@+id/detail_restaurant_like_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/restaurant_not_liked"
+            app:srcCompat="@drawable/restaurant_not_liked"
             android:backgroundTint="@color/white"
             android:layout_marginTop="@dimen/restaurantDetails_Restaurant_Button_Margin_Top"
             android:layout_gravity="center"
@@ -188,7 +176,7 @@
             android:id="@+id/detail_restaurant_website_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/restaurant_website"
+            app:srcCompat="@drawable/restaurant_website"
             android:backgroundTint="@color/white"
             android:layout_marginTop="@dimen/restaurantDetails_Restaurant_Button_Margin_Top"
             android:layout_gravity="center"
@@ -207,15 +195,27 @@
                 />
         </LinearLayout>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/detail_restaurant_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/restaurantDetails_Floating_Action_Button_Margin_End"
+        app:backgroundTint="#FFFFFF"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/detail_restaurant_picture"
+        app:layout_constraintRight_toRightOf="@id/detail_restaurant_picture"
+        app:layout_constraintTop_toBottomOf="@id/detail_restaurant_picture"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_restaurant_list_coworkers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detail_restaurant_buttons"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:scrollbars="vertical"
         tools:listitem="@layout/workmate"
         />
 
