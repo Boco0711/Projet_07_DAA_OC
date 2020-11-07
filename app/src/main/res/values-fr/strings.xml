@@ -46,4 +46,12 @@
     <string name="closed_until">"Fermé, ouvre à "</string>
     <string name="schedule_unavailable">Horaire non disponible</string>
     <string name="see_restaurant_details">Voir la page du restaurant</string>
+    <string name="sunday">" (Dim)"</string>
+    <string name="monday">" (Lun)"</string>
+    <string name="tuesday">" (Mar)"</string>
+    <string name="wednesday">" (Mer)"</string>
+    <string name="thursday">" (Jeu)"</string>
+    <string name="friday">" (Ven)"</string>
+    <string name="saturday">" (Sam)"</string>
+    <string name="open_notification_panel_of_the_app">Ouvre le panneau des notifications</string>
 </resources>
