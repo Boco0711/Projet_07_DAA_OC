@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,7 +48,7 @@ public class StartActivity extends AppCompatActivity {
     public static final String TAG = "StartActivity_TAG";
     private static final int RC_SIGN_IN = 123;
 
-    Button googleLoginButton, facebookLoginButton;
+    Button emailLoginButton, googleLoginButton, facebookLoginButton;
     TwitterLoginButton twitterLoginButton;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
@@ -55,6 +56,7 @@ public class StartActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private GoogleSignInClient mGoogleSignInClient;
+    private EmailAuthCredential emailAuthCredential;
 
 
     @Override
@@ -73,6 +75,7 @@ public class StartActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_start);
 
+        emailLoginButton = findViewById(R.id.start_activity_button_email_login);
         googleLoginButton = findViewById(R.id.start_activity_button_google_login);
         facebookLoginButton = findViewById(R.id.start_activity_button_facebook_login);
         twitterLoginButton = findViewById(R.id.start_activity_button_twitter_login);
@@ -145,6 +148,16 @@ public class StartActivity extends AppCompatActivity {
                 startSignInWithGoogle();
             }
         });
+
+        emailLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSignInWithEmail();
+            }
+        });
+    }
+
+    private void startSignInWithEmail() {
     }
 
     private void startSignInWithGoogle() {
@@ -282,5 +295,11 @@ public class StartActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "onStop: ");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
     }
 }
