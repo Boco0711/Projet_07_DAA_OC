@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/bottom_nav_mapview"
-        android:icon="@drawable/bottomnav_map_view_icon_selector"
+        android:icon="@drawable/bottomnav_mapview_black"
         android:title="@string/map_view" />
 
     <item
         android:id="@+id/bottom_nav_listview"
-        android:icon="@drawable/bottomnav_list_view_icon_selector"
+        android:icon="@drawable/bottomnav_listview_black"
         android:title="@string/list_view" />
 
     <item
         android:id="@+id/bottom_nav_workmates"
-        android:icon="@drawable/bottomnav_workmate_view_icon_selector"
+        android:icon="@drawable/bottomnav_workmates_black"
         android:title="@string/workmates" />
 
 </menu>
