@@ -20,7 +20,7 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@drawable/logo_app_foreground"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -33,14 +33,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".controller.activities.RestaurantDetailActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
-
-        <activity android:name=".controller.activities.MainActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
+        <activity
+            android:name=".controller.activities.RestaurantDetailActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".controller.activities.MainActivity"
+            android:configChanges="orientation|screenSize" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -48,10 +46,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data tools:replace="android:value"
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
     </application>
 
 </manifest>
