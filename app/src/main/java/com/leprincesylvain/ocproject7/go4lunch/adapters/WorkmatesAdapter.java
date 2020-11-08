@@ -12,9 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.leprincesylvain.ocproject7.go4lunch.R;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.CircleTransform;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
@@ -42,12 +44,15 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<Workmate, Workmat
     protected void onBindViewHolder(@NonNull WorkmatesHolder workmatesHolder, int i, @NonNull Workmate workmate) {
         Log.d(TAG, "onBindViewHolder: ");
         Context context = workmatesHolder.itemView.getContext();
-        Picasso.get().load(workmate.getUserProfilePicture()).into(workmatesHolder.mWorkmatePicture);
+        if (workmate.getUserProfilePicture() != null)
+            Picasso.get().load(workmate.getUserProfilePicture()).transform(new CircleTransform()).into(workmatesHolder.mWorkmatePicture);
+        else
+            workmatesHolder.mWorkmatePicture.setImageResource(R.drawable.workmate_no_image_found);
         Log.d(TAG, "onBindViewHolder: " + workmate.getUserProfilePicture());
 
         String workmateName = workmate.getUserName();
         String workmateRestaurantChoice = workmate.getRestaurantChoice();
-        int workmateDateOfChoice = workmate.getDateOfChoice();
+        long workmateDateOfChoice = workmate.getDateOfChoice();
         final String workmateRestaurantChoiceId = workmate.getRestaurantId();
 
         String hasSelectedThisRestaurant = workmateName + context.getString(R.string.is_joining);
