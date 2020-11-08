@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -42,6 +44,7 @@ import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
 import java.util.Arrays;
 
 public class StartActivity extends AppCompatActivity {
@@ -158,6 +161,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void startSignInWithEmail() {
+        Intent intent = new Intent(this, EmailPasswordActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
     private void startSignInWithGoogle() {
@@ -263,7 +269,7 @@ public class StartActivity extends AppCompatActivity {
         };
     }
 
-    private void updateUi(FirebaseUser user) {
+    public void updateUi(FirebaseUser user) {
         Log.d(TAG, "updateUi: ");
         if (user != null) {
             Log.d(TAG, "updateUi: User != null");
@@ -274,7 +280,6 @@ public class StartActivity extends AppCompatActivity {
             if (user.getPhotoUrl() != null) {
                 Log.d(TAG, "updateUi: user.getPhotoUrl != null");
                 String userPhoto = user.getPhotoUrl().toString();
-                userPhoto = userPhoto + "?type=large";
                 mainActivityIntent.putExtra("user_photo", userPhoto);
             } else
                 Log.d(TAG, "updateUi: user.getPhotoUrl == null");
