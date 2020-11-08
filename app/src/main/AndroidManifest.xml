@@ -33,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".controller.activities.EmailPasswordActivity"/>
         <activity
             android:name=".controller.activities.RestaurantDetailActivity"
             android:configChanges="orientation|screenSize" />
