@@ -69,6 +69,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.maps.android.SphericalUtil;
 import com.leprincesylvain.ocproject7.go4lunch.R;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.CircleTransform;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.MapsCallApi;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.NotifyWorker;
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.MapViewFragment;
@@ -397,8 +398,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     emailUser.setText(usermail);
                 }
                 if (userPicture != null) {
-                    Picasso.get().load(userPicture).into(pictureUser);
-                }
+                    Picasso.get().load(userPicture).transform(new CircleTransform()).into(pictureUser);
+                } else
+                    pictureUser.setImageResource(R.drawable.workmate_no_image_found);
             }
         };
         drawer.addDrawerListener(toggle);
