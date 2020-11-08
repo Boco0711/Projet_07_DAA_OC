@@ -21,6 +21,7 @@ import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.adapters.WorkmatesAdapter;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
 import com.leprincesylvain.ocproject7.go4lunch.controller.activities.RestaurantDetailActivity;
+import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 
@@ -88,11 +89,13 @@ public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickLi
     @Override
     public void recyclerviewClick(int position) {
         String restaurantId = null;
+        long dateOfChoice = 0;
         if (workmateList != null) {
             Workmate workmate = workmateList.get(position);
             restaurantId = workmate.getRestaurantId();
+            dateOfChoice = workmate.getDateOfChoice();
         }
-        if (restaurantId != null) {
+        if (restaurantId != null && dateOfChoice == GetDate.getDate()) {
             for (Restaurant restaurant : restaurantList) {
                 if (restaurant.getId().equalsIgnoreCase(restaurantId)) {
                     Intent intent = new Intent(getContext(), RestaurantDetailActivity.class);

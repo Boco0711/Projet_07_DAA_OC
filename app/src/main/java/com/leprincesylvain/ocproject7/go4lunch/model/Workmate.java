@@ -53,7 +53,7 @@ public class Workmate implements Parcelable {
         return restaurantId;
     }
 
-    public int getDateOfChoice() {
+    public long getDateOfChoice() {
         return dateOfChoice;
     }
 
