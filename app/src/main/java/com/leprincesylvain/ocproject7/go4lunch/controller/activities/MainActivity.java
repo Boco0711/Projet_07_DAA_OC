@@ -64,6 +64,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.maps.android.SphericalUtil;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.api.CircleTransform;
@@ -76,16 +77,10 @@ import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.SettingsFrag
 import com.leprincesylvain.ocproject7.go4lunch.controller.fragments.WorkmatesFragment;
 import com.leprincesylvain.ocproject7.go4lunch.model.Prediction;
 import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToDetail;
+import com.leprincesylvain.ocproject7.go4lunch.model.ResponseToPlace;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -602,7 +597,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getListOfRestaurants(LatLng latLng) {
-        /*Log.d(TAG, "getListOfRestaurant: ");
         String placePreUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
         String placePostUrl = "&radius=100&type=restaurant&key=";
         String url = placePreUrl + latLng.latitude + "," + latLng.longitude + placePostUrl + googleApiKey;
@@ -612,10 +606,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onResponse(@NonNull Call<ResponseToPlace> call, @NonNull Response<ResponseToPlace> response) {
                     if (response.isSuccessful()) {
-                        Log.d(TAG, "getListOfRest onResponse: is Successfull");
                         if (response.body() != null) {
                             for (int j = 0; j < response.body().getResults().size(); j++) {
-                                Log.d(TAG, "onResponse: " + j);
                                 numberOfRestaurantFromPlaceCall++;
                                 String placeId = response.body().getResults().get(j).getPlaceId();
                                 placesId.add(placeId);
@@ -633,8 +625,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IllegalStateException | JsonSyntaxException exception) {
             Log.d(TAG, "getListOfRest Exception: " + exception.getMessage());
         }
-*/
-        getJson();
     }
 
     public void getDetail(final String placeId) {
@@ -680,54 +670,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFailure(@NonNull Call<ResponseToDetail> call, @NonNull Throwable t) {
             }
         });
-    }
-
-    private void getJson() {
-        String json;
-        try {
-            InputStream inputStream = getAssets().open("placenearbysearch.json");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-
-            json = new String(buffer, StandardCharsets.UTF_8);
-            JSONArray jsonArray = new JSONArray(json);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String placeName = jsonObject.getString("name");
-            }
-            int[] ressources = {R.raw.hugo, R.raw.miranchitopaisa, R.raw.veggietasty};
-            List<String> ressourcesId = new ArrayList<>();
-            ressourcesId.add("ChIJw0QnSxVu5kcRYvvj231mXv8");
-            ressourcesId.add("ChIJidCwC0Bu5kcRhyADcTSSsrY");
-            ressourcesId.add("ChIJOd3F_j9u5kcR58fp0EX2S2c");
-            int j = 0;
-            for (int i : ressources) {
-                String myJson = getDetailOfJsonObject(this.getResources().openRawResource(i));
-                String id = ressourcesId.get(j);
-                Restaurant restaurant = new Gson().fromJson(myJson, Restaurant.class);
-                restaurant.setId(id);
-                String placeId = restaurant.getId();
-                placesId.add(placeId);
-                j++;
-            }
-            getLikedRestaurantIfNotInNearby();
-
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getDetailOfJsonObject(InputStream inputStream) {
-        try {
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, bytes.length);
-            return new String(bytes);
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     @Override
