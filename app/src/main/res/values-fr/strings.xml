@@ -28,7 +28,6 @@
     <string name="change_language">Changer de langue</string>
     <string name="choose_language">Choisir la langue</string>
     <string name="open_until">"Ouvert jusque "</string>
-    <string name="selected_language">Français</string>
     <string name="hasChoose">" mange à "</string>
     <string name="has_not_choose">" n'a pas encore décidé"</string>
     <string name="is_joining">" y va!"</string>
@@ -54,4 +53,26 @@
     <string name="friday">" (Ven)"</string>
     <string name="saturday">" (Sam)"</string>
     <string name="open_notification_panel_of_the_app">Ouvre le panneau des notifications</string>
+    <string name="disable_notification">Désactiver les notifications</string>
+    <string name="notification_activated">Notification activée</string>
+    <string name="activate_notification">Activer les notifications</string>
+    <string name="notification_unactive">Notification désactivée</string>
+    <string name="lunch_is_set_to">Votre repas est prévus à  :</string>
+    <string name="closing_soon">Ferme bientôt !</string>
+    <string name="not_a_valid_email">Merci d\'entrer un email valide</string>
+    <string name="all_field_required">Tous les champs sont requis</string>
+    <string name="fail_to_sign_in">Echec lors de la connection</string>
+    <string name="search_restaurant">Chercher un restaurant</string>
+    <string name="next_day_open_not_found">Le prochain jour d\'ouverture n\'a pas été trouvé</string>
+    <string name="hungry">J\'ai Faim !</string>
+    <string name="available_workmate">Collègues disponible</string>
+    <string name="my_lunch">Mon Repas</string>
+    <string name="settings_title">Options</string>
+    <string name="request_device_location">Pour utiliser notre application vous devez authoriser la géolocalisation</string>
+    <string name="creation_failed">Echec de la création de compte</string>
+    <string name="open_24_7">Ouvert 24/7</string>
+    <string name="with_workmate">Se joignent à vous :</string>
+    <string name="without_workmate">Vous serez seul</string>
+    <string name="no_number_available">Pas de numéro de téléphone disponible</string>
+    <string name="website_non_available">Site web non disponible</string>
 </resources>

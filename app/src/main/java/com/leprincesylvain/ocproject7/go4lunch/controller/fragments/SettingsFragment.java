@@ -1,14 +1,12 @@
 package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +15,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.controller.activities.MainActivity;
 
-import java.util.Objects;
-
 public class SettingsFragment extends Fragment {
-    private static final String TAG = "SettingsFragment_TAG";
     private TextView notificationStatus;
     private Button notificationButton, notificationPanel;
     SharedPreferences sharedPreferences;
@@ -42,10 +37,10 @@ public class SettingsFragment extends Fragment {
             NotificationManager manager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
             imp = manager.getImportance();
             soundAllowed = imp < 0 || imp >= NotificationManager.IMPORTANCE_DEFAULT;
-            Log.d(TAG, "onCreateView: " + imp);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,11 +50,11 @@ public class SettingsFragment extends Fragment {
         notificationPanel = view.findViewById(R.id.open_app_settings_notif);
         isOk = sharedPreferences.getBoolean("notif", true);
         if (isOk) {
-            notificationButton.setText("Désactiver les notifications");
-            notificationStatus.setText("Notification activée");
+            notificationButton.setText(R.string.disable_notification);
+            notificationStatus.setText(R.string.notification_activated);
         } else {
-            notificationButton.setText("Activer les notifications");
-            notificationStatus.setText("Notification désactivée");
+            notificationButton.setText(R.string.activate_notification);
+            notificationStatus.setText(R.string.notification_unactive);
         }
 
         final Intent settingsIntent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
@@ -74,14 +69,14 @@ public class SettingsFragment extends Fragment {
                     editor.putBoolean("notif", false);
                     editor.apply();
                     isOk = false;
-                    notificationButton.setText("Activer les notifications");
-                    notificationStatus.setText("Notification désactivée");
+                    notificationButton.setText(R.string.activate_notification);
+                    notificationStatus.setText(R.string.notification_unactive);
                 } else {
                     editor.putBoolean("notif", true);
                     editor.apply();
                     isOk = true;
-                    notificationButton.setText("Désactiver les notifications");
-                    notificationStatus.setText("Notification activée");
+                    notificationButton.setText(R.string.disable_notification);
+                    notificationStatus.setText(R.string.notification_activated);
                     ((MainActivity) requireActivity()).creatOneTimeWorkRequest();
                 }
             }
@@ -98,7 +93,6 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume: ");
         super.onResume();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             soundAllowed = imp < 0 || imp >= NotificationManager.IMPORTANCE_DEFAULT;

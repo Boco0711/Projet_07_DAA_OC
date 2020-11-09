@@ -64,7 +64,6 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
 
         TwitterAuthConfig mTwitterAuthConfig = new TwitterAuthConfig(getString(R.string.twitter_api_key),
@@ -89,9 +88,6 @@ public class StartActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         getAccessTokenTracker();
 
-        Log.d(TAG, "onCreate: ");
-
-        // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -113,7 +109,6 @@ public class StartActivity extends AppCompatActivity {
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                Log.d(TAG, "onCurrentAccessTokenChanged: ");
                 if (currentAccessToken == null) {
                     firebaseAuth.signOut();
                 }
@@ -122,11 +117,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void listenOnAllLoginButtonClick() {
-        Log.d(TAG, "listenOnAllLoginButtonClick: ");
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: FacebookLoginButton Clicked");
                 LoginManager.getInstance().logInWithReadPermissions(StartActivity.this, Arrays.asList("email", "public_profile"));
                 startSignInWithFacebook();
             }
@@ -135,7 +128,6 @@ public class StartActivity extends AppCompatActivity {
         twitterLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                Log.d(TAG, "Twitter success: ");
                 firebaseAuthWithTwitter(result.data);
             }
 
@@ -175,20 +167,17 @@ public class StartActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "onSuccess: ");
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithFacebook(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "onCancel: ");
                 Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "onError: " + error);
                 Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
             }
         });
@@ -196,7 +185,6 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "onActivityResult: test " + requestCode + " " + resultCode);
         callbackManager.onActivityResult(requestCode, resultCode, data);
         twitterLoginButton.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
@@ -207,7 +195,6 @@ public class StartActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d(TAG, "firebaseAuthWithGoogle:");
                 if (null != account)
                     firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
@@ -218,32 +205,25 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        Log.d(TAG, "firebaseAuthWithGoogle: " + idToken);
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         signIn(credential);
     }
 
     private void firebaseAuthWithFacebook(AccessToken accessToken) {
-        Log.d(TAG, "handleFacebookToken: " + accessToken);
-
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         signIn(credential);
     }
 
     private void firebaseAuthWithTwitter(TwitterSession twitterSession) {
-        Log.d(TAG, "signInToFirebaseWithTwitterSession: ");
-
         AuthCredential credential = TwitterAuthProvider.getCredential(twitterSession.getAuthToken().token, twitterSession.getAuthToken().secret);
         signIn(credential);
     }
 
     private void signIn(AuthCredential credential) {
-        Log.d(TAG, "signIn: with one of 3 means ");
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: sign in success");
                     firebaseAuth.getCurrentUser();
                 } else {
                     Log.d(TAG, "onComplete: sign in failed ");
@@ -256,13 +236,10 @@ public class StartActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d(TAG, "onAuthStateChanged: ");
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d(TAG, "onAuthStateChanged: user != null");
                     updateUi(user);
                 } else {
-                    Log.d(TAG, "onAuthStateChanged: user = null");
                     updateUi(null);
                 }
             }
@@ -270,42 +247,33 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void updateUi(FirebaseUser user) {
-        Log.d(TAG, "updateUi: ");
         if (user != null) {
-            Log.d(TAG, "updateUi: User != null");
             String userName = user.getDisplayName();
             String userEmail = user.getEmail();
             String userId = user.getUid();
             Intent mainActivityIntent = new Intent(this, MainActivity.class);
             if (user.getPhotoUrl() != null) {
-                Log.d(TAG, "updateUi: user.getPhotoUrl != null");
                 String userPhoto = user.getPhotoUrl().toString();
                 mainActivityIntent.putExtra("user_photo", userPhoto);
-            } else
-                Log.d(TAG, "updateUi: user.getPhotoUrl == null");
+            }
             mainActivityIntent.putExtra("user_name", userName);
             mainActivityIntent.putExtra("user_email", userEmail);
             mainActivityIntent.putExtra("user_id", userId);
             startActivity(mainActivityIntent);
             this.finish();
-        } else
-            Log.d(TAG, "updateUi: User == null");
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (authStateListener != null) {
-            Log.d(TAG, "onStop: ");
             firebaseAuth.removeAuthStateListener(authStateListener);
-        } else {
-            Log.d(TAG, "onStop: ");
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: ");
     }
 }

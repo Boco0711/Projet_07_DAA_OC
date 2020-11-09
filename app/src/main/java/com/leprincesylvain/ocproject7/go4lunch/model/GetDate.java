@@ -5,8 +5,6 @@ import android.util.Log;
 import java.util.Calendar;
 
 public class GetDate {
-    public static final String TAG = "GetDate: ";
-
     public static long getDate() {
         Calendar currentDate = Calendar.getInstance();
 
@@ -17,7 +15,6 @@ public class GetDate {
         long date = year + month + day;
         if (currentDate.get(Calendar.HOUR_OF_DAY) > 12)
             date++;
-        Log.d(TAG, "getDate: " + date);
         return date;
     }
 }

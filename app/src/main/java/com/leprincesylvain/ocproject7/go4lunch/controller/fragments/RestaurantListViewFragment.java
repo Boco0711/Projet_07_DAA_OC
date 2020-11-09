@@ -5,22 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.adapters.MyRestaurantRecyclerViewAdapter;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
+
 import java.util.List;
 
 public class RestaurantListViewFragment extends Fragment {
-    public static final String TAG = "TAG";
     private List<Restaurant> restaurantsList;
     private LatLng latLng;
     private RecyclerView mRecyclerView;
@@ -32,7 +33,6 @@ public class RestaurantListViewFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             restaurantsList = getArguments().getParcelableArrayList("list");

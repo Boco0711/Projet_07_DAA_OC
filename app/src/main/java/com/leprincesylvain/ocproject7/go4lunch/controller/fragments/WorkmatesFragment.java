@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -26,12 +28,13 @@ import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;
 
 import java.util.List;
+import java.util.Objects;
 
 public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickListener {
-    private static final String TAG = "WorkmatesFragment_TAG";
-
     private FirebaseFirestore firebaseFirestoreInstance = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = firebaseFirestoreInstance.collection("Users");
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private String currentUserUid = Objects.requireNonNull(currentUser).getUid();
 
     private WorkmatesAdapter workmateAdapter;
 
@@ -39,7 +42,6 @@ public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickLi
     private List<Workmate> workmateList;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             restaurantList = getArguments().getParcelableArrayList("restaurantList");
@@ -49,14 +51,12 @@ public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickLi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_workmates, container, false);
         setUpRecyclerView(view);
         return view;
     }
 
     private void setUpRecyclerView(View view) {
-        Log.d(TAG, "setUpRecyclerView: ");
         Query query = collectionReference
                 .orderBy("dateOfChoice", Query.Direction.DESCENDING)
                 .orderBy("userName", Query.Direction.ASCENDING);
@@ -75,14 +75,12 @@ public class WorkmatesFragment extends Fragment implements RecyclerViewOnClickLi
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: ");
         workmateAdapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: ");
         workmateAdapter.stopListening();
     }
 

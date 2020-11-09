@@ -167,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         googleApiKey = getResources().getString(R.string.google_api_key);
         if (savedInstanceState != null)
@@ -194,9 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void creatOneTimeWorkRequest() {
-        Log.d(TAG, "creatOneTimeWorkRequest: ");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
 
         Data inputData = new Data.Builder()
                 .putString("userId", userId)
@@ -209,11 +206,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         long wantedTime = 720;
 
         long initDelai = wantedTime - now;
-        Log.d(TAG, "creatOneTimeWorkRequest: init delai" + initDelai);
         if (initDelai < 0)
             initDelai = (initDelai + 1440) * 60;
-
-        Log.d(TAG, "creatOneTimeWorkRequest: " + initDelai);
 
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(NotifyWorker.class)
                 .setInputData(inputData)
@@ -225,18 +219,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu: ");
         getMenuInflater().inflate(R.menu.main, menu);
 
         MenuItem item = menu.findItem(R.id.menu_search_icon);
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                Log.d(TAG, "onMenuItemActionExpand: ");
                 androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
 
                 searchView.setBackgroundColor(getResources().getColor(R.color.white));
-                searchView.setQueryHint("Search Restaurant");
+                searchView.setQueryHint(getString(R.string.search_restaurant));
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
@@ -246,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        Log.d(TAG, "onQueryTextChange: ");
                         predictionList.clear();
                         restaurantListMatchingPrediction.clear();
                         if (newText.length() == 0) {
@@ -278,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void autoCompleteWidget(String string) {
-        Log.d(TAG, "autoCompleteWidget: " + string);
         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
         RectangularBounds bounds = RectangularBounds.newInstance(
                 toBounds(latLng, 2000).southwest,
@@ -305,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 restaurantListMatchingPrediction.clear();
                 if (predictionList.size() > 0) {
                     for (Prediction prediction : predictionList) {
-                        Log.d(TAG, "onSuccess: " + prediction.getName() + " " + prediction.getPlaceId());
                         autocompleteCallDetail++;
                         getDetail(prediction.getPlaceId());
                     }
@@ -340,8 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userPicture = getIntent().getExtras().getString("user_photo");
             usermail = getIntent().getExtras().getString("user_email");
             userId = getIntent().getExtras().getString("user_id");
-        } else {
-            Log.d(TAG, "getUserDetails: getExtras() == null");
         }
     }
 
@@ -459,30 +446,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int getFragmentSelected;
 
     private void callShowProperFragment(int fragmentIdentifier) {
-        Log.d(TAG, "callShowProperFragment: " + fragmentIdentifier);
         fragmentSelected = fragmentIdentifier;
         switch (fragmentIdentifier) {
             case MAPVIEW_FRAGMENT:
                 this.showMapViewFragment();
-                setTitle("I'm Hungry!");
+                setTitle(getString(R.string.hungry));
                 getFragmentSelected = MAPVIEW_FRAGMENT;
                 break;
             case RESTAURANT_LISTVIEW_FRAGMENT:
                 this.showRestaurantListViewFragment();
-                setTitle("I'm Hungry!");
+                setTitle(getString(R.string.hungry));
                 getFragmentSelected = RESTAURANT_LISTVIEW_FRAGMENT;
                 break;
             case COWORKER_LISTVIEW_FRAGMENT:
                 this.showCoworkerListViewFragment();
-                setTitle("Available workmates");
+                setTitle(getString(R.string.available_workmate));
                 break;
             case MY_LUNCH_FRAGMENT:
                 this.showMyLunchFragment();
-                setTitle("My lunch");
+                setTitle(getString(R.string.my_lunch));
                 break;
             case SETTINGS_FRAGMENT:
                 this.showSettingsFragment();
-                setTitle("Settings");
+                setTitle(getString(R.string.settings_title));
                 break;
             default:
                 break;
@@ -499,7 +485,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showRestaurantListViewFragment() {
-        Log.d(TAG, "showRestaurantListViewFragment: " + restaurantsToUse.size());
         restaurantListViewFragment = new RestaurantListViewFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", restaurantsToUse);
@@ -571,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getDeviceLocation();
             } else {
                 mLocationPermissionGranted = false;
-                Toast.makeText(this, "If you want to use our app you need to allow device location", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.request_device_location, Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -606,7 +591,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onProviderDisabled(String provider) {
     }
 
-    // Never Called
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
@@ -658,11 +642,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void getDetail(final String placeId) {
-
         String detailPreUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=";
         String detailPostUrl = "&fields=name,formatted_address,formatted_phone_number,opening_hours,website,geometry,rating,photo&key=";
         String url = detailPreUrl + placeId + detailPostUrl + googleApiKey;
-        Log.d(TAG, "getDetail: " + url);
         Call<ResponseToDetail> call = mapsCallApi.getRestaurantDetails(url);
         call.enqueue(new Callback<ResponseToDetail>() {
             @Override
@@ -671,20 +653,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     numberOfCallToDetail++;
                     Restaurant restaurant = response.body().getRestaurant();
                     if (restaurant != null) {
-                        Log.d(TAG, "onResponse: getrestaurant detail " + restaurant.getName());
                         restaurant.setId(placeId);
                         if (mapViewFragment != null) {
                             if (autocompleteCallDetail > 0) {
-                                Log.d(TAG, "onResponse: autoCompleteCallDetail " + restaurant.getName());
                                 restaurantListMatchingPrediction.add(restaurant);
                                 restaurantsToUse = restaurantListMatchingPrediction;
                                 mapViewFragment.clearMapFromMarker();
                                 mapViewFragment.putMarkerOnMap(restaurantListMatchingPrediction);
                                 if (getFragmentSelected == RESTAURANT_LISTVIEW_FRAGMENT) {
-                                    Log.d(TAG, "onResponse: size of toUse " + restaurantsToUse.size());
                                     showRestaurantListViewFragment();
                                 } else if (getFragmentSelected == MAPVIEW_FRAGMENT) {
-                                    Log.d(TAG, "onResponse: size of toUse " + restaurantsToUse.size());
                                     showMapViewFragment();
                                 }
                             } else {

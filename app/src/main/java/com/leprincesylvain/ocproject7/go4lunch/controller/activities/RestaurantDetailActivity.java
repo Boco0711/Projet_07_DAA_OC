@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,8 +45,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
-    private static final String TAG = "RestaurantDeatil_TAG";
-
     private ImageView mRestaurantPicture, mRestaurantRating1, mRestaurantRating2, mRestaurantRating3, mRestaurantLike;
     private LinearLayout mRestaurantCallBox, mRestaurantLikeBox, mRestaurantWebsiteBox;
     private TextView mRestaurantName, mRestaurantAddress;
@@ -81,7 +78,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         makeBinding();
 
         if (getIntent().getExtras() != null) {
-            Log.d(TAG, "onCreate: ");
             restaurant = getIntent().getExtras().getParcelable("restaurant");
         }
 
@@ -116,16 +112,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void setRestaurantPhoto() {
-        Log.d(TAG, "setRestaurantPhoto: ");
         String googleApiKey = getApplicationContext().getString(R.string.google_api_key);
         if (restaurant.getPhotos() != null && restaurant.getPhotos().size() > 0) {
-            Log.d(TAG, "setRestaurantPhoto: 1");
             String reference = restaurant.getPhotos().get(0).getPhoto_reference();
             String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + reference + "&key=" + googleApiKey;
-            Log.d(TAG, "setRestaurantPhoto: " + photoUrl);
             Picasso.get().load(photoUrl).into(mRestaurantPicture);
         } else {
-            Log.d(TAG, "setRestaurantPhoto: 2");
             mRestaurantPicture.setImageResource(R.drawable.restaurant_no_image_found);
         }
     }
@@ -201,7 +193,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void getListOfCoworkerEatingThere() {
-        Log.d(TAG, "getListOfcoWorkerEatingThere: ");
         Query query = collectionReference
                 .whereEqualTo("restaurantChoice", restaurant.getName())
                 .whereEqualTo("dateOfChoice", date);
@@ -219,7 +210,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void setListenerOnBoxes() {
-        Log.d(TAG, "setListenerOnBoxes: ");
         if (restaurant.getWebsite() != null) {
             visitWebsite();
         }
@@ -233,8 +223,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestaurantWebsiteBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getWebsite()));
-                startActivity(browserIntent);
+                if (restaurant.getWebsite() != null) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getWebsite()));
+                    startActivity(browserIntent);
+                } else
+                    Toast.makeText(getApplicationContext(), R.string.website_non_available, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -249,7 +242,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     intent.setData(Uri.parse("tel:" + restaurant.getFormatted_phone_number()));
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getApplicationContext(), "No number available", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.no_number_available, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -309,7 +302,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: ");
         finish();
     }
 }

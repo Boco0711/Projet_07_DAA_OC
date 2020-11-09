@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -51,9 +50,7 @@ public class NotifyWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d("TAG", "creat doWork: ");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Log.d("TAG", "creat doWork: " + sharedPreferences.getBoolean("notif", true));
         if (sharedPreferences.getBoolean("notif", true)) {
             userId = getInputData().getString("userId");
             createNotification();
@@ -62,7 +59,6 @@ public class NotifyWorker extends Worker {
     }
 
     private void createNotification() {
-        Log.d("TAG", "createNotification: ");
         DocumentReference userReference = userRef.document(userId);
 
         userReference.get()
@@ -92,8 +88,6 @@ public class NotifyWorker extends Worker {
     private List<String> workmates = new ArrayList<>();
 
     private void getAllWorkmateEatingWithUser(final String choice, long dateOfChoice) {
-        Log.d("TAG", "getAllWorkmateEatingWithUser: ");
-
         userRef.whereEqualTo("restaurantChoice", choice)
                 .whereEqualTo("dateOfChoice", dateOfChoice)
                 .get()
@@ -118,23 +112,22 @@ public class NotifyWorker extends Worker {
     }
 
     private void displayNotification(String restaurantChoice, List<String> workmates) {
-        Log.d("TAG", "displayNotification: " + restaurantChoice);
         NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("testingchannel", "testingchannelname", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("go4lunch", "go4lunchNotification", NotificationManager.IMPORTANCE_DEFAULT);
             Objects.requireNonNull(manager).createNotificationChannel(channel);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "testingchannel")
-                .setContentTitle("Votre repas est prévus à " + restaurantChoice)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "go4lunch")
+                .setContentTitle(getApplicationContext().getString(R.string.lunch_is_set_to) + restaurantChoice)
                 .setSmallIcon(R.drawable.logo_app_foreground);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         if (workmates.size() > 0)
-            inboxStyle.addLine("Se joindrons à vous :");
+            inboxStyle.addLine(getApplicationContext().getString(R.string.with_workmate));
         else
-            inboxStyle.addLine("Personne ne se joind à vous");
+            inboxStyle.addLine(getApplicationContext().getString(R.string.without_workmate));
 
         for (String string : workmates) {
             inboxStyle.addLine(string);

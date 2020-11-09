@@ -2,7 +2,6 @@ package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLunchFragment extends Fragment {
-    public static final String TAG = "MyLnchFragment_TAG";
-
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserUid = Objects.requireNonNull(currentUser).getUid();
     private FirebaseFirestore firebaseFirestoreInstance = FirebaseFirestore.getInstance();
@@ -47,7 +44,6 @@ public class MyLunchFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             restaurantList = getArguments().getParcelableArrayList("list");
@@ -57,7 +53,6 @@ public class MyLunchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_mylunch, container, false);
         restaurantName = view.findViewById(R.id.my_lunch_selected_restaurant_text);
         restaurantDetailButton = view.findViewById(R.id.my_lunch_detail_button);
@@ -66,7 +61,6 @@ public class MyLunchFragment extends Fragment {
     }
 
     private void getIfUserHasSelectedARestaurant() {
-        Log.d(TAG, "checkIfUserHasSelectedARestaurant: ");
         userReference.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -86,12 +80,10 @@ public class MyLunchFragment extends Fragment {
     }
 
     private void getRestaurantIfExist(String choiceOfRestaurant, long dateOfChoice) {
-        Log.d(TAG, "getRestaurantIfExist: ");
         int i = 0;
         for (final Restaurant restaurant : restaurantList) {
             if ((restaurant.getName().equalsIgnoreCase(choiceOfRestaurant)) && (date == dateOfChoice)) {
                 i++;
-                Log.d(TAG, "onSuccess: 2");
                 restaurantDetailButton.setText(R.string.see_restaurant_details);
                 String willEatAt = requireContext().getString(R.string.selected_a_restaurant_mylunch) + choiceOfRestaurant;
                 restaurantName.setText(willEatAt);
@@ -106,7 +98,6 @@ public class MyLunchFragment extends Fragment {
             }
         }
         if (i == 0) {
-            Log.d(TAG, "onSuccess: " + i);
             restaurantName.setText(requireContext().getString(R.string.not_selected_restaurant_mylunch));
             restaurantDetailButton.setVisibility(View.GONE);
         }

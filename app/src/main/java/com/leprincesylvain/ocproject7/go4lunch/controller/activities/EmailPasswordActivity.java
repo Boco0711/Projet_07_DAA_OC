@@ -110,7 +110,7 @@ public class EmailPasswordActivity extends AppCompatActivity {
                                     }
                                 });
                         } else {
-                            Toast.makeText(EmailPasswordActivity.this, "Creation failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EmailPasswordActivity.this, R.string.creation_failed, Toast.LENGTH_SHORT).show();
                             updateUi(null);
                         }
                     }

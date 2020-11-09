@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,20 +37,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRestaurantRecyclerViewAdapter.ViewHolder> {
-    private final static String TAG = "RecyclerViewAdapter_Tag";
-
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference userRef = db.collection("Users");
     private final List<Restaurant> restaurantList;
     private final LatLng latLng;
     long date = GetDate.getDate();
-    private int j;
+    private int numberOfCoworker;
     Context context;
-
     int intOfToday;
     int currentHourAsInt;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference userRef = db.collection("Users");
 
     public MyRestaurantRecyclerViewAdapter(List<Restaurant> restaurantList, LatLng latLng) {
         this.restaurantList = restaurantList;
@@ -68,10 +60,8 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         return new ViewHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: ");
         setSomeValue();
         final Restaurant restaurant = restaurantList.get(position);
 
@@ -80,10 +70,10 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         String distance = meterDistance + "m";
 
         holder.mRestaurantName.setText(restaurant.getName());
-        int iend = restaurant.getFormatted_address().indexOf(',');
-        String adresse = restaurant.getFormatted_address().substring(0, iend) + "rue du faubourg saint honorée de la libertée des etat unis d'amérique";
+        int endOfString = restaurant.getFormatted_address().indexOf(',');
+        String adress = restaurant.getFormatted_address().substring(0, endOfString);
 
-        holder.mRestaurantAdresse.setText(adresse);
+        holder.mRestaurantAdresse.setText(adress);
         holder.mRestaurantDistance.setText(distance);
         if (restaurant.getPhotos() != null && restaurant.getPhotos().get(0).getPhoto_reference().length() > 0) {
             Picasso.get().load(getPhoto(restaurant.getPhotos().get(0).getPhoto_reference())).into(holder.mRestaurantImage);
@@ -155,18 +145,16 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
     }
 
     private String getPhoto(String reference) {
-        String baseUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+        String baseUrl = context.getString(R.string.photoref_url);
         String key = context.getString(R.string.google_api_key);
         return (baseUrl + reference + "&key=" + key);
     }
 
     private void displayCorrectSentenceOnHourField(ViewHolder holder, Restaurant restaurant) {
-        Log.d(TAG, "displayCorrectSentenceOnHourField: ");
-        //String heure = getCorrectSentence(restaurant);
-        String heure = getNumberOfServiceToday(restaurant);
-        char firstLettreOfHeure = heure.charAt(0);
+        String hour = getNumberOfServiceToday(restaurant);
+        char firstLettreOfHour = hour.charAt(0);
 
-        switch (firstLettreOfHeure) {
+        switch (firstLettreOfHour) {
             case 'F':
             case 'C':
                 holder.mRestaurantHours.setTextColor(Color.RED);
@@ -178,7 +166,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 holder.mRestaurantHours.setTextColor(Color.BLACK);
                 break;
         }
-        holder.mRestaurantHours.setText(heure);
+        holder.mRestaurantHours.setText(hour);
     }
 
     private void displayCorrectRatingForRestaurant(ViewHolder holder, Double note) {
@@ -211,12 +199,12 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        j = 0;
+                        numberOfCoworker = 0;
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            j++;
+                            numberOfCoworker++;
                         }
-                        String numberOfCoworker = "(" + j + ")";
-                        if (j > 0) {
+                        String numberOfCoworker = "(" + MyRestaurantRecyclerViewAdapter.this.numberOfCoworker + ")";
+                        if (MyRestaurantRecyclerViewAdapter.this.numberOfCoworker > 0) {
                             holder.mRestaurantImageCoworkers.setVisibility(View.VISIBLE);
                             holder.mRestaurantCoworkers.setText(numberOfCoworker);
                         }
@@ -235,14 +223,13 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
         List<Period> periodList = new ArrayList<>();
 
         if (restaurant.getOpeningHours() == null) {
-            Log.d(TAG, "getNumberOfServiceToday: ");
             return context.getResources().getString(R.string.schedule_unavailable);
         }
 
         Period[] periods = restaurant.getOpeningHours().getPeriod();
 
         if (restaurant.getOpeningHours().getPeriod().length == 1 && periods[0].getClose() == null) {
-            returned = "Open 24/7";
+            returned = context.getString(R.string.open_24_7);
         } else {
             for (Period period : restaurant.getOpeningHours().getPeriod()) {
                 if (period.getClose() != null) {
@@ -358,7 +345,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
                 return time;
             }
         }
-        return "Next Open Day Have Not Been Found";
+        return context.getString(R.string.next_day_open_not_found);
     }
 
     private boolean noPeriodThisDay(int day, Restaurant restaurant) {
@@ -374,7 +361,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
     private String correctSentence(String string) {
         char firstLetter = string.charAt(0);
         if (firstLetter == 87) {
-            string = "Closing soon !";
+            string = context.getString(R.string.closing_soon);
             return string;
         }
         String day = string.substring(5);
@@ -397,7 +384,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             SimpleDateFormat _12H = new SimpleDateFormat("hh:mm aa");
             Date _24HDate = _24H.parse(hour);
             assert _24HDate != null;
-            if (Locale.getDefault().getDisplayLanguage() == "en")
+            if (Locale.getDefault().getLanguage().equalsIgnoreCase("en"))
                 correctOpeningOrClosingHour = _12H.format(_24HDate);
             else
                 correctOpeningOrClosingHour = _24H.format(_24HDate);
@@ -408,7 +395,7 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
             correctOpeningOrClosingHour = correctOpeningOrClosingHour.substring(0, 2) + correctOpeningOrClosingHour.substring(5);
         }
         correctOpeningOrClosingHour = correctOpeningOrClosingHour.replaceFirst("^0+(?!$)", "");
-        if (!Locale.getDefault().getDisplayLanguage().equalsIgnoreCase("en"))
+        if (!Locale.getDefault().getLanguage().equalsIgnoreCase("en"))
             correctOpeningOrClosingHour = correctOpeningOrClosingHour + "H";
         return correctOpeningOrClosingHour;
     }
@@ -464,7 +451,6 @@ public class MyRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<MyRest
     }
 
     public void updateTimes() {
-        Log.d(TAG, "updateTimes: ");
         for (int i = 0; i < restaurantList.size(); i++) {
             final Restaurant note = restaurantList.get(i);
 
