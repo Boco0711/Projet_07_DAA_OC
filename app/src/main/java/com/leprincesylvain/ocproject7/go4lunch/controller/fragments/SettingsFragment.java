@@ -77,7 +77,7 @@ public class SettingsFragment extends Fragment {
                     isOk = true;
                     notificationButton.setText(R.string.disable_notification);
                     notificationStatus.setText(R.string.notification_activated);
-                    ((MainActivity) requireActivity()).creatOneTimeWorkRequest();
+                    ((MainActivity) requireActivity()).createOneTimeWorkRequest();
                 }
             }
         });

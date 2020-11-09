@@ -186,10 +186,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         Places.initialize(getApplicationContext(), getResources().getString(R.string.google_api_key));
         placesClient = Places.createClient(this);
-        creatOneTimeWorkRequest();
+        createOneTimeWorkRequest();
     }
 
-    public void creatOneTimeWorkRequest() {
+    public void createOneTimeWorkRequest() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Data inputData = new Data.Builder()
@@ -197,10 +197,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .build();
 
         Calendar calendar = Calendar.getInstance();
-        long nowInMillis = (Calendar.HOUR_OF_DAY * 60) + Calendar.MINUTE;
 
-        int now = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
-        long wantedTime = 720;
+        long now = (((calendar.get(calendar.HOUR_OF_DAY) * 60) + (calendar.get(calendar.MINUTE))) * 60 + calendar.get(calendar.SECOND));
+        long wantedTime = 720 * 60;
 
         long initDelai = wantedTime - now;
         if (initDelai < 0)
