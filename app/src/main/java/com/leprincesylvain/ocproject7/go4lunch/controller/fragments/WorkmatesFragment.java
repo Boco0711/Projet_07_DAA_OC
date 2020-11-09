@@ -2,7 +2,6 @@ package com.leprincesylvain.ocproject7.go4lunch.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.leprincesylvain.ocproject7.go4lunch.R;
 import com.leprincesylvain.ocproject7.go4lunch.adapters.WorkmatesAdapter;
-import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
 import com.leprincesylvain.ocproject7.go4lunch.controller.activities.RestaurantDetailActivity;
+import com.leprincesylvain.ocproject7.go4lunch.controller.api.RecyclerViewOnClickListener;
 import com.leprincesylvain.ocproject7.go4lunch.model.GetDate;
 import com.leprincesylvain.ocproject7.go4lunch.model.Restaurant;
 import com.leprincesylvain.ocproject7.go4lunch.model.Workmate;

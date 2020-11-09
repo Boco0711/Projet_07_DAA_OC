@@ -93,7 +93,7 @@ public class Restaurant implements Parcelable {
         formatted_phone_number = in.readString();
         website = in.readString();
         rating = in.readDouble();
-        photos = new ArrayList<Photo>();
+        photos = new ArrayList<>();
         in.readList(photos, Photo.class.getClassLoader());
     }
 

@@ -34,7 +34,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            NotificationManager manager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager) getContext().getSystemService(requireContext().NOTIFICATION_SERVICE);
             imp = manager.getImportance();
             soundAllowed = imp < 0 || imp >= NotificationManager.IMPORTANCE_DEFAULT;
         }

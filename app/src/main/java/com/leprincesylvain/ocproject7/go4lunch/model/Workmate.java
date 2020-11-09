@@ -3,8 +3,6 @@ package com.leprincesylvain.ocproject7.go4lunch.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Workmate implements Parcelable {
     private String userProfilePicture;
     private String userName;

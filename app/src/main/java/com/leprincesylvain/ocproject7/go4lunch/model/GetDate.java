@@ -1,7 +1,5 @@
 package com.leprincesylvain.ocproject7.go4lunch.model;
 
-import android.util.Log;
-
 import java.util.Calendar;
 
 public class GetDate {

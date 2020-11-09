@@ -9,7 +9,7 @@ import java.util.List;
 public class ResponseToDetail {
     @SerializedName("html_attributions")
     @Expose
-    private List<Object> html_attributions= new ArrayList<Object>();
+    private List<Object> html_attributions= new ArrayList<>();
 
     @SerializedName("result")
     @Expose

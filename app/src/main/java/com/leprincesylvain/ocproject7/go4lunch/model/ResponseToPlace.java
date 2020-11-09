@@ -8,11 +8,11 @@ import java.util.List;
 public class ResponseToPlace {
     @SerializedName("html_attributions")
     @Expose
-    private List<Object> html_attributions = new ArrayList<Object>();
+    private List<Object> html_attributions = new ArrayList<>();
 
     @SerializedName("results")
     @Expose
-    private List<PlaceId> results = new ArrayList<PlaceId>();
+    private List<PlaceId> results = new ArrayList<>();
 
     @SerializedName("status")
     @Expose

@@ -66,8 +66,8 @@ public class NotifyWorker extends Worker {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            String choiceOfRestaurant = "";
-                            long dateOfChoice = 0;
+                            String choiceOfRestaurant;
+                            long dateOfChoice;
                             if (documentSnapshot.getString(KEY_RESTAURANTCHOICE) != null && documentSnapshot.getLong(KEY_DATEOFCHOICE) != null) {
                                 choiceOfRestaurant = documentSnapshot.getString(KEY_RESTAURANTCHOICE);
                                 dateOfChoice = documentSnapshot.getLong(KEY_DATEOFCHOICE);
