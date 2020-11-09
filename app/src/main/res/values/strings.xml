@@ -88,4 +88,10 @@
     <string name="activate_notification">Activate notifications</string>
     <string name="notification_unactive">Notifications disabled</string>
     <string name="lunch_is_set_to">Your lunch is set at :</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_in">Sign in</string>
+    <string name="create">Create</string>
 </resources>
